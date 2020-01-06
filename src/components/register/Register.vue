@@ -11,12 +11,15 @@
     </p>
 
     <div>
-      <input v-model="username" placeholder="Set username..." />
+      <input
+        class="artXButton"
+        v-model="username"
+        placeholder="Set username..."
+      />
 
       <br />
-      <br />
 
-      <button id="register" class="btn" v-on:click="registerUsername">
+      <button id="register" class="artButton" v-on:click="registerUsername">
         Register
       </button>
     </div>

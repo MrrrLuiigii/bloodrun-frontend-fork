@@ -46,6 +46,14 @@ export default {
   margin-top: 5vh;
 }
 
+.artButton:focus {
+  outline: 0;
+}
+
+.artXButton:focus {
+  outline: 0;
+}
+
 .artXButton {
   width: 350px;
   height: 50px;
