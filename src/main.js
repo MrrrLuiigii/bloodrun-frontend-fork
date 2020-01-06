@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 // Import the Auth0 configuration
-import { domain, clientId, audience,prompt } from "@/auth/auth_config.json";
+import { domain, clientId, audience } from "@/auth/auth_config.json";
 
 // Import the plugin here
 import { Auth0Plugin } from "./auth";
@@ -34,7 +34,6 @@ Vue.use( Auth0Plugin, {
   domain,
   clientId,
   audience,
-  prompt,
   onRedirectCallback: appState => {
     router.push(
       appState && appState.targetUrl

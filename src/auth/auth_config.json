@@ -1,6 +1,5 @@
 {
-  "domain": "dev-eternitywars.eu.auth0.com",
-  "clientId": "46gUe2Oyymnx5fAvb6tPSmkzBb4yTN5D",
-  "audience": "https://EternityWarsResourceServer",
-  "prompt": "login"
+  "domain": "deathrun.auth0.com",
+  "clientId": "PX922OBgq6eSQWEmY4WdJzOEn8zhnkhH",
+  "audience": "https://DeathrunApi"
 }

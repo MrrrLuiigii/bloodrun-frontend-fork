@@ -1,7 +1,7 @@
 <template>
 <div>
     <img id="logo" src="../../assets/logo.png">
-
+{{getPlayerInfo}}
     <navbar></navbar>
 
 
@@ -11,6 +11,8 @@
 <script>
 
 import navbar from "../nav/nav"
+import axios from "axios"
+import store from "../../store/index.js"
 
 export default {
   name: "Home",
@@ -21,12 +23,6 @@ export default {
   },
   data() {
     return {
-            wsMessage: {
-              Subject: null,
-              Action: null,
-              Content: null,
-              Token: null
-        },
         Chatcontainer: null
     };
   },
@@ -36,37 +32,36 @@ export default {
     }
   },
   created(){
-    this.$options.sockets.onmessage = (data) => this.messageReceived(data)
     this.GetUserInformation();
     
   },
   methods: {
     async GetUserInformation() {
-      this.wsMessage.Subject = "USER"
-      this.wsMessage.Action = "GetUserByEmail"
-      this.wsMessage.Content = this.$auth.user.email
-      this.wsMessage.Token = await this.$auth.getTokenSilently()
-      this.$socket.send(JSON.stringify(this.wsMessage))
-      console.log(this.wsMessage)
+      axios
+      .request({
+            url: '/api/private/user/getByEmail/'+this.$auth.user.email,
+            method: 'get',
+            baseURL: 'http://145.93.97.10:8081',
+            headers: {
+                'Authorization': 'Bearer '+ await this.$auth.getTokenSilently(),
+                'Content-Type': 'application/json',
+            },
+        }).then((data) => {
+          store.dispatch('SavePlayerInfo', data.data)
+          console.log(data.data)
+        }).finally(() => {
+        this.checkData()
+      }).error((e) =>{
+          console.log(e)
+        });
     },
     checkData(){
-      if(this.getPlayerInfo.username == null){
+      if(this.getPlayerInfo.name === null){
         this.$router.push('/register')
       }
       else{
           this.registerToServer()
       }
-    },
-    messageReceived(data){
-      console.log(data.data)
-      const jsonData = JSON.parse(data.data)
-      switch(jsonData.action){
-         case "GetUserByEmail":
-            this.$store.dispatch('SavePlayerInfo',jsonData.content)
-            console.log(jsonData.content)
-            this.checkData()
-          break
-        }
     },
     async registerToServer(){
       this.wsMessage.Subject = "REGISTER"

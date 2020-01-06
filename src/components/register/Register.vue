@@ -12,7 +12,7 @@
 
     <div>
       <input
-        v-model="payload.username"
+        v-model="username"
         placeholder="Set username..."
       />
 
@@ -28,20 +28,14 @@
 </template>
 
 <script>
+import store from "../../store/index.js"
+import axios from "axios"
 
 export default {
   name: "register",
   data() {
     return {
-      payload:{
-        username: null,
-      }, 
-      wsMessage: {
-        Subject: null,
-        Action: null,
-        Content: null,
-        Token: null
-    }
+        username: null, 
   };
   },
     computed: {
@@ -49,38 +43,35 @@ export default {
       return this.$store.getters.getPlayerInfo;
     }
   },
-    created(){
-    this.$options.sockets.onmessage = (data) => this.messageReceived(data) 
-  },
-  mounted() {
-    console.log(this.$store.getters.getPlayerInfo);
-  },
   methods: {
    async registerUsername(){
-        this.wsMessage.Subject = "USER"
-        this.wsMessage.Action = "AddUser"
-        const cont = this.getPlayerInfo
-        cont.email = this.$auth.user.email
-        cont.username = this.payload.username
-        this.wsMessage.Content = cont
-        this.wsMessage.Token = await this.$auth.getTokenSilently()
-        this.$socket.send(JSON.stringify(this.wsMessage))
-      console.log(this.wsMessage)
+      axios
+      .request({
+            url: '/api/private/user/createUser/',
+            method: 'post',
+            baseURL: 'http://145.93.97.10:8081',
+            headers: {
+                'Authorization': 'Bearer '+ await this.$auth.getTokenSilently(),
+                'Content-Type': 'application/json',
+            },
+            params: {
+            name:  this.$auth.user.name,
+            email: this.$auth.user.email
+          }
+        }).then((data) => {
+          store.dispatch('SavePlayerInfo', data.data)
+          console.log(data.data)
+        }).finally(() => {
+        this.checkData()
+      }).error((e) =>{
+          console.log(e)
+        });
     },
     checkData(){
-      if(this.getPlayerInfo.username != null){
+      if(this.getPlayerInfo.username !== null){
         this.$router.push('/')
         }
       },
-    messageReceived(data){
-      const jsonData = JSON.parse(data.data)
-      switch(jsonData.action){
-         case "AddUser":
-           console.log(jsonData.content)
-           this.$store.dispatch('SavePlayerInfo',jsonData.content)
-           this.checkData()
-        }
-    }
   }
 };
 </script>
