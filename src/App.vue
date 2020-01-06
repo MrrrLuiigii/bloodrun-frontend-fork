@@ -36,6 +36,7 @@ export default {
   width: 100%;
   overflow: hidden;
   user-select: none;
+  outline: 0;
 }
 
 #logo {
