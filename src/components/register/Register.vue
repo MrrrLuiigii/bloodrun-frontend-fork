@@ -51,7 +51,7 @@ export default {
             "Content-Type": "application/json"
           },
           params: {
-            name: this.$auth.user.name,
+            name: this.username,
             email: this.$auth.user.email
           }
         })
