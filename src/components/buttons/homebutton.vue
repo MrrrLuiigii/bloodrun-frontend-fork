@@ -1,20 +1,15 @@
 <template>
-     <div>
+  <div>
     <Router-link to="/">
-        <button
-      class="artXButton"
-    >
-      Home
-    </button>
-    </router-link>
+      <button class="artXButton">
+        Home
+      </button>
+    </Router-link>
   </div>
 </template>
 <script>
 export default {
-    name: "hoembutton"
-    
-}
+  name: "homebutton"
+};
 </script>
-<style>
-
-</style>
+<style></style>
