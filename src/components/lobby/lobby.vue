@@ -29,7 +29,6 @@ export default {
         Subject: null,
         Action: null,
         Content: null,
-        Player: null,
         Token: null
       }
     };
@@ -39,10 +38,9 @@ export default {
       this.wsMessage.Subject = "LOBBY";
       this.wsMessage.Action = "JOINLOBBY";
       this.wsMessage.Content = this.datalobby;
-      this.wsMessage.Player = this.$store.getters.getPlayerInfo;
+      this.wsMessage.Content.userOne = this.$store.getters.getPlayerInfo;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
       this.$socket.send(JSON.stringify(this.wsMessage));
-      console.log(this.wsMessage);
     },
     getPlayerCount() {
       var count = 0;

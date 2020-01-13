@@ -60,7 +60,6 @@ export default {
         })
         .then(data => {
           store.dispatch("SavePlayerInfo", data.data);
-          console.log(data.data);
         })
         .finally(() => {
           this.checkData();
