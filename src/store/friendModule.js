@@ -1,6 +1,8 @@
 export default {
   state: {
-    friends: [{ accountStatus: "Online", friendStatus: "Requested" }]
+    friends: [
+      { username: "Yeet", accountStatus: "Online", friendStatus: "Requested" }
+    ]
   },
   mutations: {
     SEND_FRIEND_REQUEST(state, friendname) {
