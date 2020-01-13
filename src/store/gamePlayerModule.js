@@ -1,11 +1,9 @@
 export default {
   state: {
     gamePlayer: {
-      lobbyPlayerStatus: null,
       email: null,
       userId: null,
-      username: null,
-      session: null
+      username: null
     }
   },
   mutations: {

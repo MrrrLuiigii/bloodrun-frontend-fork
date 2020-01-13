@@ -56,6 +56,7 @@ export default {
           const id = data.id;
           this.$store.dispatch("SaveJoinedLobby", data);
           this.$router.push({ name: "gamelobby", params: { id } });
+          console.table(data);
           break;
         }
         case "GETLOBBIES": {
