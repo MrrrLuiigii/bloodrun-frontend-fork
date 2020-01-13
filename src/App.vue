@@ -26,6 +26,12 @@ export default {
   src: url("/assets/font/Turtles.ttf");
 }
 
+.turtlesFont {
+  font-family: "Turtles" !important;
+  color: #c10000 !important;
+  font-size: 20px !important;
+}
+
 #app {
   font-family: "Turtles";
   color: #c10000;

@@ -1,10 +1,10 @@
 <template>
   <div>
-    <homebutton />
     <div>
-      <lobbylist />
       <lobbyform />
+      <lobbylist />
     </div>
+    <homebutton />
   </div>
 </template>
 

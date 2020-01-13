@@ -19,6 +19,11 @@ export default {
   mounted() {},
   data() {
     return {
+      wsMessage: {
+        Action: null,
+        Content: null,
+        Token: null
+      },
       Chatcontainer: null
     };
   },
@@ -61,8 +66,7 @@ export default {
       }
     },
     async registerToServer() {
-      this.wsMessage.Subject = "REGISTER";
-      this.wsMessage.Action = "";
+      this.wsMessage.Action = "REGISTER";
       const cont = this.getPlayerInfo;
       this.wsMessage.Content = cont;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
