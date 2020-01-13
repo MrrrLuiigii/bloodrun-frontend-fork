@@ -1,115 +1,111 @@
 <template>
-<div>
-    <img id="logo" src="../../assets/logo.png">
-{{getPlayerInfo}}
+  <div>
+    <img id="logo" src="../../assets/logo.png" />
+
     <navbar></navbar>
-
-
   </div>
 </template>
 
 <script>
-
-import navbar from "../nav/nav"
-import axios from "axios"
-import store from "../../store/index.js"
+import navbar from "../nav/nav";
+import axios from "axios";
+import store from "../../store/index.js";
 
 export default {
   name: "Home",
-  components:{ 
+  components: {
     navbar
   },
-  mounted(){
-  },
+  mounted() {},
   data() {
     return {
-        Chatcontainer: null
+      wsMessage: {
+        Action: null,
+        Content: null,
+        Token: null
+      },
+      Chatcontainer: null
     };
   },
   computed: {
-    getPlayerInfo(){
+    getPlayerInfo() {
       return this.$store.getters.getPlayerInfo;
     }
   },
-  created(){
+  created() {
     this.GetUserInformation();
-    
   },
   methods: {
     async GetUserInformation() {
       axios
-      .request({
-            url: '/api/private/user/getByEmail/'+this.$auth.user.email,
-            method: 'get',
-            baseURL: 'http://145.93.97.10:8081',
-            headers: {
-                'Authorization': 'Bearer '+ await this.$auth.getTokenSilently(),
-                'Content-Type': 'application/json',
-            },
-        }).then((data) => {
-          store.dispatch('SavePlayerInfo', data.data)
-          console.log(data.data)
-        }).finally(() => {
-        this.checkData()
-      }).error((e) =>{
-          console.log(e)
+        .request({
+          url: "/api/private/user/getByEmail/" + this.$auth.user.email,
+          method: "get",
+          baseURL: "http://145.93.97.10:8081",
+          headers: {
+            Authorization: "Bearer " + (await this.$auth.getTokenSilently()),
+            "Content-Type": "application/json"
+          }
+        })
+        .then(data => {
+          store.dispatch("SavePlayerInfo", data.data);
+          console.log(data.data);
+        })
+        .finally(() => {
+          this.checkData();
+        })
+        .error(e => {
+          console.log(e);
         });
     },
-    checkData(){
-      if(this.getPlayerInfo.name === null){
-        this.$router.push('/register')
-      }
-      else{
-          this.registerToServer()
+    checkData() {
+      if (this.getPlayerInfo.name === null) {
+        this.$router.push("/register");
+      } else {
+        this.registerToServer();
       }
     },
-    async registerToServer(){
-      this.wsMessage.Subject = "REGISTER"
-      const cont = this.getPlayerInfo
-      this.wsMessage.Content = cont
-      this.wsMessage.Token = await this.$auth.getTokenSilently()
-      this.$socket.send(JSON.stringify(this.wsMessage))
-      console.log(this.wsMessage)
-    },
+    async registerToServer() {
+      this.wsMessage.Action = "REGISTER";
+      const cont = this.getPlayerInfo;
+      this.wsMessage.Content = cont;
+      this.wsMessage.Token = await this.$auth.getTokenSilently();
+      this.$socket.send(JSON.stringify(this.wsMessage));
+      console.log(this.wsMessage);
+    }
   }
 };
 </script>
 
 <style scoped>
+body {
+  color: #35252f;
+  background-color: #3a5248;
+  text-align: center;
 
-  body {
-    color: #35252f;
-    background-color: #3a5248;
-    text-align: center;
+  font-size: 2vh;
+}
 
-    font-size: 2vh;
-  }
+h1 {
+  font-size: 5vh;
+  font-weight: bold;
+}
 
-  h1 {
-    font-size: 5vh;
-    font-weight: bold;
-  }
+img {
+  height: 100%;
+  width: 100%;
+  margin-bottom: 5vh;
+}
 
-  img {
-    height: 100%;
-    width: 100%;
-    margin-bottom: 5vh;
-  }
+input {
+  width: 350px;
+  height: 40px;
+  text-align: center;
+}
 
-  input {
-    width: 350px;
-    height: 40px;
-    text-align: center;
-    background-image: url("../../assets/buttonXLong.png");
-    background-size: 100% 100%;
-  }  
-
-  button {
-    width: 150px;
-    height: 50px;
-    text-align: center;
-    background-image: url("../../assets/button.png");
-    background-size: 100% 100%;
-  }
-
+button {
+  width: 150px;
+  height: 50px;
+  text-align: center;
+}
 </style>
