@@ -36,14 +36,6 @@
                     type="password"
                   />
                 </v-col>
-                <v-col cols="12">
-                  <input
-                    class="artXButton lobbyFormInput"
-                    v-model="Lobby.tournamentCode"
-                    placeholder="Tournament code"
-                    type="password"
-                  />
-                </v-col>
               </v-row>
             </v-container>
             <small class="turtlesFont">*indicates required field</small>

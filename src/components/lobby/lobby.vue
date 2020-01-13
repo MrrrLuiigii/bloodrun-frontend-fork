@@ -43,7 +43,6 @@ export default {
       this.wsMessage.Token = await this.$auth.getTokenSilently();
       this.$socket.send(JSON.stringify(this.wsMessage));
       console.log(this.wsMessage);
-      this.$router.push({ name: "gamelobby" });
     },
     getPlayerCount() {
       var count = 0;
@@ -80,14 +79,19 @@ export default {
 }
 
 .joinButton {
+  position: absolute;
+  bottom: 2vh;
+
+  margin-left: -4vw;
+
   border-radius: 10px;
   border: 2px solid #c10000;
   background-color: #191938;
 }
 
 .lobbyBlock {
-  height: 100%;
-  width: 100%;
+  height: 25vh;
+  width: 20vw;
   position: relative;
   padding: 2vh 5vw;
   justify-content: center;
