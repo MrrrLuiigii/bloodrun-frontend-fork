@@ -1,9 +1,12 @@
 <template>
-  <div>
-    <div>{{ this.datalobby.id }}</div>
-    <div>{{ this.datalobby.name }}</div>
-    <div>{{ this.datalobby.description }}</div>
-    <button v-on:click="joinLobby">join</button>
+  <div class="lobbyBlock">
+    <div>
+      <div class="lobbyName">{{ this.datalobby.name }}</div>
+      <div class="lobbyDescription">{{ this.datalobby.description }}</div>
+      <div class="lobbyDescription">{{this.getPlayerCount()}} / 2</div>
+    </div>    
+    <button v-if="this.getPlayerCount() < 2" class="artSButton joinButton" v-on:click="joinLobby">Join</button>
+    <div v-else class="artSButton joinButton">Full</div>
   </div>
 </template>
 
@@ -33,8 +36,36 @@ data() {
     this.$socket.send(JSON.stringify(this.wsMessage))
     console.log(this.wsMessage)
    },
+   getPlayerCount(){
+     if(this.datalobby.playerTwo !== null){
+       return 2
+     }
+     return 1
+   },
   }
 };
 </script>
 
-<style></style>
+<style>
+  .lobbyName {
+    font-size: 30px;
+  }
+
+  .lobbyDescription {
+    font-size: 15px;
+  }
+
+  .joinButton {
+    position: absolute;
+    bottom: 2vh;
+  }
+
+  .lobbyBlock {
+    height: 100%;
+    widows: 100%;
+    position: relative;
+    padding: 2vh 5vw;
+    justify-content: center;
+    display: flex;
+  }
+</style>
