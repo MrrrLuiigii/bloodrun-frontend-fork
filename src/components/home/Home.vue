@@ -65,7 +65,6 @@ export default {
     },
     async registerToServer(){
       this.wsMessage.Subject = "REGISTER"
-      this.wsMessage.Action = ""
       const cont = this.getPlayerInfo
       this.wsMessage.Content = cont
       this.wsMessage.Token = await this.$auth.getTokenSilently()
