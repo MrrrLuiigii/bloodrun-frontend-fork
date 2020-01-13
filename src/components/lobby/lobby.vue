@@ -43,7 +43,6 @@ export default {
       this.wsMessage.Token = await this.$auth.getTokenSilently();
       this.$socket.send(JSON.stringify(this.wsMessage));
       console.log(this.wsMessage);
-      this.$router.push({ name: "gamelobby" });
     },
     getPlayerCount() {
       var count = 0;
