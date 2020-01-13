@@ -8,8 +8,6 @@ export default {
       state.joinedLobby = lobby;
     },
     SAVE_LOBBIES(state, lobbies) {
-      console.table("SAVE:" + lobbies);
-
       state.lobbies = lobbies;
     }
   },
@@ -23,8 +21,6 @@ export default {
   },
   actions: {
     SaveLobbies({ commit }, lobbies) {
-      console.table("Actions: " + lobbies);
-
       commit("SAVE_LOBBIES", lobbies);
     },
     SaveJoinedLobby({ commit }, lobby) {

@@ -60,8 +60,6 @@ export default {
         }
         case "GETLOBBIES": {
           this.$store.dispatch("SaveLobbies", jsonData.content.lobbies);
-          console.table(jsonData.content.lobbies);
-          console.log(this.$store.getters.getLobbies);
           break;
         }
       }
