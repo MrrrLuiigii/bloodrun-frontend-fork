@@ -46,7 +46,25 @@ export default {
       this.$router.push({ name: "gamelobby" });
     },
     getPlayerCount() {
-      return this.datalobby.players.length;
+      var count = 0;
+
+      if (this.datalobby.userOne.id !== 0) {
+        count++;
+      }
+
+      if (this.datalobby.userTwo.id !== 0) {
+        count++;
+      }
+
+      if (this.datalobby.userThree.id !== 0) {
+        count++;
+      }
+
+      if (this.datalobby.userFour.id !== 0) {
+        count++;
+      }
+
+      return count;
     }
   }
 };
@@ -69,7 +87,7 @@ export default {
 
 .lobbyBlock {
   height: 100%;
-  widows: 100%;
+  width: 100%;
   position: relative;
   padding: 2vh 5vw;
   justify-content: center;

@@ -2,7 +2,7 @@
   <div class="lobbyContainer scrollable">
     <div
       v-bind:class="[index % 2 === 0 ? lobbyLeft : lobbyRight]"
-      v-for="(lobby, index) in getlobbies"
+      v-for="(lobby, index) in a"
       :key="index"
       :lobby="lobby"
     >
@@ -24,7 +24,6 @@ export default {
       lobbyLeft: "lobbyLeft",
       lobbyRight: "lobbyRight",
       wsMessage: {
-        Subject: null,
         Action: null,
         Content: null,
         Token: null
@@ -33,24 +32,21 @@ export default {
     };
   },
   computed: {
-    getlobbies() {
+    a() {
       return this.$store.getters.getLobbies;
     }
   },
   created() {
     this.$options.sockets.onmessage = data => this.messageReceived(data);
-    this.loadNewLobbies();
+    this.loadLobbies();
   },
   methods: {
-    async loadNewLobbies() {
-      this.wsMessage.Subject = "LOBBY";
+    async loadLobbies() {
       this.wsMessage.Action = "GETLOBBIES";
       const cont = this.$store.getters.getPlayerInfo;
       this.wsMessage.Content = cont;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
       this.$socket.send(JSON.stringify(this.wsMessage));
-      console.log(this.wsMessage);
-      this.getDecks();
     },
     messageReceived(data) {
       const jsonData = JSON.parse(data.data);
@@ -64,6 +60,8 @@ export default {
         }
         case "GETLOBBIES": {
           this.$store.dispatch("SaveLobbies", jsonData.content.lobbies);
+          console.table(jsonData.content.lobbies);
+          console.log(this.$store.getters.getLobbies);
           break;
         }
       }

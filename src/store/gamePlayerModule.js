@@ -1,10 +1,10 @@
 export default {
   state: {
     gamePlayer: {
-      lobbyPlayerStatus: "NotReady",
-      email: "nicky@gmail.com",
-      userId: 1,
-      username: "MrrrLuiigii",
+      lobbyPlayerStatus: null,
+      email: null,
+      userId: null,
+      username: null,
       session: null
     }
   },
