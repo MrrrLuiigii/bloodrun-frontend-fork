@@ -55,6 +55,18 @@ export default new Router({
       component: () =>
         import(/* webpackChunkName: "about" */ "@/Views/GameLobby.vue"),
       beforeEnter: authGuard
+    },
+    {
+      path: "/reconnect",
+      name: "reconnect",
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () =>
+        import(
+          /* webpackChunkName: "about" */ "@/components/game/gameReconnect.vue"
+        ),
+      beforeEnter: authGuard
     }
   ]
 });

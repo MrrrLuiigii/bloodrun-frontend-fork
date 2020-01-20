@@ -6,6 +6,11 @@
           Play
         </button>
       </Router-link>
+      <Router-link to="/reconnect">
+        <button class="artXButton">
+          Reconnect
+        </button>
+      </Router-link>
     </div>
 
     <div>

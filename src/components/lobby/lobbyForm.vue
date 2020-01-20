@@ -61,6 +61,7 @@ export default {
   name: "lobbyForm",
   data() {
     return {
+      socket: null,
       Lobby: {
         name: "",
         description: "",
@@ -74,6 +75,24 @@ export default {
       },
       dialog: false
     };
+  },
+  created() {
+    // this.socket = new WebSocket("ws://145.93.149.160:8250/ws/");
+    // this.socket.onopen = function(e) {
+    //   console.log("Connection open: " + e);
+    // };
+    // this.socket.onmessage = function(event) {
+    //   this.messageReceived(event.data);
+    // };
+    // this.socket.onclose = function(event) {
+    //   console.log("Connection closed: " + event);
+    //   // if (event.wasClean) {
+    //   // } else {
+    //   // }
+    // };
+    // this.socket.onerror = function(error) {
+    //   console.log("Error: " + error);
+    // };
   },
   methods: {
     async addNewLobby() {
