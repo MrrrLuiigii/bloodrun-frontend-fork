@@ -38,7 +38,6 @@ export default {
     return {
       id: "",
       wsMessage: {
-        Subject: null,
         Action: null,
         Content: null,
         Player: null,
@@ -67,36 +66,21 @@ export default {
     messageReceived(data) {
       const jsonData = JSON.parse(data.data);
       switch (jsonData.action) {
-        case "UPDATELOBBY": {
+        case "JOINLOBBY": {
           this.$store.dispatch("SaveJoinedLobby", jsonData.content);
-          this.updateGamePlayer(jsonData.content);
+          console.table(jsonData.content);
           break;
         }
       }
     },
-    updateGamePlayer(data) {
-      const user = this.getplayer;
-      if (data.playerOne !== undefined) {
-        if (data.playerOne.username === user.username) {
-          this.$store.dispatch("SaveGamePlayer", data.playerOne);
-        } else {
-          this.$store.dispatch("SaveGamePlayer", data.playerTwo);
-        }
-      } else {
-        this.$store.dispatch("SaveGamePlayer", data.playerTwo);
-      }
-    },
     async leave() {
-      this.wsMessage.Subject = "LOBBY";
       this.wsMessage.Action = "LEAVELOBBY";
       this.wsMessage.Content = this.joinedLobby;
       this.wsMessage.Player = this.$store.getters.getPlayerInfo;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
       this.$socket.send(JSON.stringify(this.wsMessage));
-      this.$store.dispatch("ClearSelectedDeck", null);
     },
     async ready() {
-      this.wsMessage.Subject = "LOBBY";
       this.wsMessage.Action = "PLAYERREADY";
       this.wsMessage.Content = this.joinedLobby;
       this.wsMessage.Player = this.$store.getters.getGamePlayer;
@@ -104,7 +88,6 @@ export default {
       this.$socket.send(JSON.stringify(this.wsMessage));
     },
     async unReady() {
-      this.wsMessage.Subject = "LOBBY";
       this.wsMessage.Action = "PLAYERNOTREADY";
       this.wsMessage.Content = this.joinedLobby;
       this.wsMessage.Player = this.$store.getters.getGamePlayer;
