@@ -24,6 +24,7 @@ export default {
   props: ["lobby"],
   data() {
     return {
+      socket: null,
       datalobby: this.lobby,
       wsMessage: {
         Subject: null,
@@ -33,6 +34,24 @@ export default {
       }
     };
   },
+  created() {
+    this.socket = new WebSocket("ws://145.93.149.160:8250/ws/");
+
+    this.socket.onopen = () => {};
+
+    this.socket.onmessage = () => {};
+
+    this.socket.onclose = function(event) {
+      console.log("Connection closed: " + event);
+      // if (event.wasClean) {
+      // } else {
+      // }
+    };
+
+    this.socket.onerror = function(error) {
+      console.log("Error: " + error);
+    };
+  },
   methods: {
     async joinLobby() {
       this.wsMessage.Subject = "LOBBY";
@@ -40,7 +59,7 @@ export default {
       this.wsMessage.Content = this.datalobby;
       this.wsMessage.Content.userOne = this.$store.getters.getPlayerInfo;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
-      this.$socket.send(JSON.stringify(this.wsMessage));
+      this.socket.send(JSON.stringify(this.wsMessage));
     },
     getPlayerCount() {
       var count = 0;

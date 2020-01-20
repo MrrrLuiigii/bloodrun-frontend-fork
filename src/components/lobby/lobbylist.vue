@@ -48,19 +48,16 @@ export default {
 
     this.socket.onmessage = event => {
       console.log(event.data);
-      this.aap(event.data);
+      this.messageReceived(event.data);
     };
 
-    this.socket.onclose = function(event) {
-      console.log("Connection closed: " + event);
+    this.socket.onclose = function() {
       // if (event.wasClean) {
       // } else {
       // }
     };
 
-    this.socket.onerror = function(error) {
-      console.log("Error: " + error);
-    };
+    this.socket.onerror = function() {};
   },
   methods: {
     async registerToServer() {
@@ -68,22 +65,22 @@ export default {
       this.wsMessage.Content = this.$store.getters.getPlayerInfo;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
       this.socket.send(JSON.stringify(this.wsMessage));
-      console.log(this.wsMessage);
     },
     async loadLobbies() {
       this.wsMessage.Action = "GETLOBBIES";
       this.wsMessage.Content = this.$store.getters.getPlayerInfo;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
       this.socket.send(JSON.stringify(this.wsMessage));
-      console.log(this.wsMessage);
     },
-    aap(data) {
-      console.table(data);
+    messageReceived(data) {
       const jsonData = JSON.parse(data);
       switch (jsonData.action) {
         case "JOINLOBBY": {
           const data = jsonData.content;
           const id = data.id;
+
+          console.log("JoinedLobby");
+          console.log(data);
           this.$store.dispatch("SaveJoinedLobby", data);
           this.$router.push({ name: "gamelobby", params: { id } });
           break;

@@ -77,22 +77,21 @@ export default {
     };
   },
   created() {
-    // this.socket = new WebSocket("ws://145.93.149.160:8250/ws/");
-    // this.socket.onopen = function(e) {
-    //   console.log("Connection open: " + e);
-    // };
-    // this.socket.onmessage = function(event) {
-    //   this.messageReceived(event.data);
-    // };
-    // this.socket.onclose = function(event) {
-    //   console.log("Connection closed: " + event);
-    //   // if (event.wasClean) {
-    //   // } else {
-    //   // }
-    // };
-    // this.socket.onerror = function(error) {
-    //   console.log("Error: " + error);
-    // };
+    this.socket = new WebSocket("ws://145.93.149.160:8250/ws/");
+
+    this.socket.onopen = () => {};
+
+    this.socket.onmessage = event => {
+      this.messageReceived(event.data);
+    };
+
+    this.socket.onclose = function() {
+      // if (event.wasClean) {
+      // } else {
+      // }
+    };
+
+    this.socket.onerror = function() {};
   },
   methods: {
     async addNewLobby() {
@@ -101,7 +100,7 @@ export default {
       this.wsMessage.Content = this.Lobby;
       this.wsMessage.Content.userOne = this.$store.getters.getPlayerInfo;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
-      this.$socket.send(JSON.stringify(this.wsMessage));
+      this.socket.send(JSON.stringify(this.wsMessage));
       console.log(this.wsMessage);
     }
   }
