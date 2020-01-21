@@ -61,6 +61,7 @@ export default {
   name: "lobbyForm",
   data() {
     return {
+      socket: null,
       Lobby: {
         name: "",
         description: "",
@@ -75,6 +76,23 @@ export default {
       dialog: false
     };
   },
+  created() {
+    this.socket = new WebSocket("ws://145.93.96.211:8250/ws/");
+
+    this.socket.onopen = () => {};
+
+    this.socket.onmessage = event => {
+      this.messageReceived(event.data);
+    };
+
+    this.socket.onclose = function() {
+      // if (event.wasClean) {
+      // } else {
+      // }
+    };
+
+    this.socket.onerror = function() {};
+  },
   methods: {
     async addNewLobby() {
       this.dialog = false;
@@ -82,7 +100,7 @@ export default {
       this.wsMessage.Content = this.Lobby;
       this.wsMessage.Content.userOne = this.$store.getters.getPlayerInfo;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
-      this.$socket.send(JSON.stringify(this.wsMessage));
+      this.socket.send(JSON.stringify(this.wsMessage));
       console.log(this.wsMessage);
     }
   }

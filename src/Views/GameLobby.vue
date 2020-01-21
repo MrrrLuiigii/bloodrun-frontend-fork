@@ -1,11 +1,14 @@
 <template>
   <div>
-    <p>{{ joinedLobby }}</p>
+    <p>{{ this.joinedLobby }}</p>
     <Playerinfo v-bind:playerIndex="0" />
     <Playerinfo v-bind:playerIndex="1" />
     <Playerinfo v-bind:playerIndex="2" />
     <Playerinfo v-bind:playerIndex="3" />
     <div>
+      <div>
+        <button v-on:click="startGame" class="artXButton">Start</button>
+      </div>
       <div>
         <Router-link to="/lobbies">
           <button v-on:click="leave" class="artXButton">
@@ -34,8 +37,9 @@ export default {
   components: {
     Playerinfo
   },
-  data: function() {
+  data() {
     return {
+      socket: null,
       id: "",
       wsMessage: {
         Action: null,
@@ -46,7 +50,27 @@ export default {
     };
   },
   created() {
-    this.$options.sockets.onmessage = data => this.messageReceived(data);
+    this.socket = new WebSocket("ws://145.93.96.211:8250/ws/");
+
+    this.socket.onopen = () => {
+      this.registerToServer();
+    };
+
+    this.socket.onmessage = event => {
+      console.log(event.data);
+      this.messageReceived(event.data);
+    };
+
+    this.socket.onclose = function(event) {
+      console.log("Connection closed: " + event);
+      // if (event.wasClean) {
+      // } else {
+      // }
+    };
+
+    this.socket.onerror = function(error) {
+      console.log("Error: " + error);
+    };
   },
   mounted() {
     this.id = this.$route.params.id;
@@ -63,36 +87,95 @@ export default {
     }
   },
   methods: {
+    async registerToServer() {
+      this.wsMessage.Action = "REGISTER";
+      this.wsMessage.Content = this.$store.getters.getPlayerInfo;
+      this.wsMessage.Token = await this.$auth.getTokenSilently();
+      this.socket.send(JSON.stringify(this.wsMessage));
+    },
     messageReceived(data) {
-      const jsonData = JSON.parse(data.data);
+      const jsonData = JSON.parse(data);
       switch (jsonData.action) {
+        case "STARTGAME": {
+          this.setParameters(jsonData);
+          this.launchGame();
+          break;
+        }
         case "JOINLOBBY": {
-          this.$store.dispatch("SaveJoinedLobby", jsonData.content);
-          console.table(jsonData.content);
+          const data = jsonData.content;
+          const id = data.id;
+          this.$store.dispatch("SaveJoinedLobby", data);
+          this.$router.push({ name: "gamelobby", params: { id } });
+          break;
+        }
+        case "UPDATELOBBY": {
+          const data = jsonData.content;
+          const id = data.id;
+          this.$store.dispatch("SaveJoinedLobby", data);
+          this.$router.push({ name: "gamelobby", params: { id } });
           break;
         }
       }
     },
+    setParameters(jsonData) {
+      const username = this.$store.getters.getPlayerInfo.username;
+      const ip = jsonData.content.ip;
+
+      var content = ip + "\n" + username;
+
+      const filepath = "C:\\Bloodrun\\BloodrunProperties.props";
+
+      var fs = require("fs");
+      try {
+        fs.writeFileSync(filepath, content, "utf-8");
+      } catch (e) {
+        alert("Failed to save the file !");
+      }
+    },
+    launchGame() {
+      var child = require("child_process").execFile;
+      var executablePath = "C:\\Bloodrun\\BloodRunV2.exe";
+
+      child(executablePath, function(err, data) {
+        if (err) {
+          console.error(err + data);
+          return;
+        }
+      });
+    },
+    async startGame() {
+      this.wsMessage.Action = "STARTGAME";
+      this.wsMessage.Content = this.joinedLobby;
+      this.wsMessage.Token = await this.$auth.getTokenSilently();
+      this.socket.send(JSON.stringify(this.wsMessage));
+    },
     async leave() {
       this.wsMessage.Action = "LEAVELOBBY";
-      this.wsMessage.Content = this.joinedLobby;
-      this.wsMessage.Player = this.$store.getters.getPlayerInfo;
+
+      var lobby = JSON.parse(JSON.stringify(this.joinedLobby));
+      lobby.userOne = null;
+      lobby.userTwo = null;
+      lobby.userThree = null;
+      lobby.userFour = null;
+      lobby.userOne = this.$store.getters.getPlayerInfo;
+
+      this.wsMessage.Content = lobby;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
-      this.$socket.send(JSON.stringify(this.wsMessage));
+      this.socket.send(JSON.stringify(this.wsMessage));
     },
     async ready() {
       this.wsMessage.Action = "PLAYERREADY";
       this.wsMessage.Content = this.joinedLobby;
       this.wsMessage.Player = this.$store.getters.getGamePlayer;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
-      this.$socket.send(JSON.stringify(this.wsMessage));
+      this.socket.send(JSON.stringify(this.wsMessage));
     },
     async unReady() {
       this.wsMessage.Action = "PLAYERNOTREADY";
       this.wsMessage.Content = this.joinedLobby;
       this.wsMessage.Player = this.$store.getters.getGamePlayer;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
-      this.$socket.send(JSON.stringify(this.wsMessage));
+      this.socket.send(JSON.stringify(this.wsMessage));
     }
   }
 };

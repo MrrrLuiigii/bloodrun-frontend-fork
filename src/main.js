@@ -20,14 +20,6 @@ import Toasted from "vue-toasted";
 
 Vue.use(Toasted);
 
-import VueNativeSock from "vue-native-websocket";
-
-Vue.use(VueNativeSock, "ws://145.93.149.196:8250/ws/", {
-  reconnection: true, // (Boolean) whether to reconnect automatically (false)
-  reconnectionAttempts: 5, // (Number) number of reconnection attempts before giving up (Infinity),
-  reconnectionDelay: 3000 // (Number) how long to initially wait before attempting a new (1000)
-});
-
 // Install the authentication plugin here
 Vue.use(Auth0Plugin, {
   domain,

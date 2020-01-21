@@ -48,7 +48,7 @@ export default {
         .request({
           url: "/api/private/user/createUser/",
           method: "post",
-          baseURL: "http://145.93.97.10:8081",
+          baseURL: "http://145.93.96.211:8081",
           headers: {
             Authorization: "Bearer " + (await this.$auth.getTokenSilently()),
             "Content-Type": "application/json"

@@ -41,7 +41,7 @@ export default {
         .request({
           url: "/api/private/user/getByEmail/" + this.$auth.user.email,
           method: "get",
-          baseURL: "http://145.93.97.10:8081",
+          baseURL: "http://145.93.96.211:8081",
           headers: {
             Authorization: "Bearer " + (await this.$auth.getTokenSilently()),
             "Content-Type": "application/json"
@@ -49,7 +49,6 @@ export default {
         })
         .then(data => {
           store.dispatch("SavePlayerInfo", data.data);
-          console.log(data.data);
         })
         .finally(() => {
           this.checkData();
@@ -59,19 +58,9 @@ export default {
         });
     },
     checkData() {
-      if (this.getPlayerInfo.name === null) {
+      if (this.getPlayerInfo.username === null) {
         this.$router.push("/register");
-      } else {
-        this.registerToServer();
       }
-    },
-    async registerToServer() {
-      this.wsMessage.Action = "REGISTER";
-      const cont = this.getPlayerInfo;
-      this.wsMessage.Content = cont;
-      this.wsMessage.Token = await this.$auth.getTokenSilently();
-      this.$socket.send(JSON.stringify(this.wsMessage));
-      console.log(this.wsMessage);
     }
   }
 };

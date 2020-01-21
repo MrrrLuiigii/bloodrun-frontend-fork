@@ -2,7 +2,7 @@
   <div class="lobbyContainer scrollable">
     <div
       v-bind:class="[index % 2 === 0 ? lobbyLeft : lobbyRight]"
-      v-for="(lobby, index) in a"
+      v-for="(lobby, index) in getLobbies"
       :key="index"
       :lobby="lobby"
     >
@@ -21,6 +21,7 @@ export default {
   },
   data() {
     return {
+      socket: null,
       lobbyLeft: "lobbyLeft",
       lobbyRight: "lobbyRight",
       wsMessage: {
@@ -32,35 +33,61 @@ export default {
     };
   },
   computed: {
-    a() {
+    getLobbies() {
       return this.$store.getters.getLobbies;
     }
   },
   created() {
-    this.$options.sockets.onmessage = data => this.messageReceived(data);
-    this.loadLobbies();
+    this.socket = new WebSocket("ws://145.93.96.211:8250/ws/");
+
+    this.socket.onopen = () => {
+      this.registerToServer().then(() => {
+        this.loadLobbies();
+      });
+    };
+
+    this.socket.onmessage = event => {
+      console.log(event.data);
+      this.messageReceived(event.data);
+    };
+
+    this.socket.onclose = function() {
+      // if (event.wasClean) {
+      // } else {
+      // }
+    };
+
+    this.socket.onerror = function() {};
   },
   methods: {
+    async registerToServer() {
+      this.wsMessage.Action = "REGISTER";
+      this.wsMessage.Content = this.$store.getters.getPlayerInfo;
+      this.wsMessage.Token = await this.$auth.getTokenSilently();
+      this.socket.send(JSON.stringify(this.wsMessage));
+    },
     async loadLobbies() {
       this.wsMessage.Action = "GETLOBBIES";
-      const cont = this.$store.getters.getPlayerInfo;
-      this.wsMessage.Content = cont;
+      this.wsMessage.Content = this.$store.getters.getPlayerInfo;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
-      this.$socket.send(JSON.stringify(this.wsMessage));
+      this.socket.send(JSON.stringify(this.wsMessage));
     },
     messageReceived(data) {
-      const jsonData = JSON.parse(data.data);
+      const jsonData = JSON.parse(data);
       switch (jsonData.action) {
         case "JOINLOBBY": {
           const data = jsonData.content;
           const id = data.id;
+
+          console.log("JoinedLobby");
+          console.log(data);
           this.$store.dispatch("SaveJoinedLobby", data);
           this.$router.push({ name: "gamelobby", params: { id } });
-          console.table(data);
           break;
         }
         case "GETLOBBIES": {
           this.$store.dispatch("SaveLobbies", jsonData.content.lobbies);
+          console.log(jsonData.content);
           break;
         }
       }
