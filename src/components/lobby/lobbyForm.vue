@@ -77,7 +77,9 @@ export default {
     };
   },
   created() {
-    this.socket = new WebSocket("ws://145.93.96.211:8250/ws/");
+    this.socket = new WebSocket(
+      "ws://" + this.$store.getters.getIpAddress + ":8250/ws/"
+    );
 
     this.socket.onopen = () => {};
 
