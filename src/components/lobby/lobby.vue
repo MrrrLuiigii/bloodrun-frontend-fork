@@ -35,7 +35,7 @@ export default {
     };
   },
   created() {
-    this.socket = new WebSocket("ws://145.93.149.160:8250/ws/");
+    this.socket = new WebSocket("ws://145.93.96.211:8250/ws/");
 
     this.socket.onopen = () => {};
 

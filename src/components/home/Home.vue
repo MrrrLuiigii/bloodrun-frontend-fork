@@ -41,7 +41,7 @@ export default {
         .request({
           url: "/api/private/user/getByEmail/" + this.$auth.user.email,
           method: "get",
-          baseURL: "http://145.93.96.178:8081",
+          baseURL: "http://145.93.96.211:8081",
           headers: {
             Authorization: "Bearer " + (await this.$auth.getTokenSilently()),
             "Content-Type": "application/json"
