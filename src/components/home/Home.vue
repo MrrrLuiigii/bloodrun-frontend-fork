@@ -58,7 +58,8 @@ export default {
         });
     },
     checkData() {
-      if (this.getPlayerInfo.name === null) {
+      console.log(this.getPlayerInfo);
+      if (this.getPlayerInfo.username === null) {
         this.$router.push("/register");
       }
     }

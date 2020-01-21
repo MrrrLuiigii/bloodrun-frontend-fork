@@ -94,20 +94,30 @@ export default {
       this.socket.send(JSON.stringify(this.wsMessage));
     },
     messageReceived(data) {
-      console.table("Data" + data);
       const jsonData = JSON.parse(data);
       switch (jsonData.action) {
         case "STARTGAME": {
           this.setParameters(jsonData);
           this.launchGame();
-          console.log("Yeet");
+          break;
+        }
+        case "JOINLOBBY": {
+          const data = jsonData.content;
+          const id = data.id;
+          this.$store.dispatch("SaveJoinedLobby", data);
+          this.$router.push({ name: "gamelobby", params: { id } });
+          break;
+        }
+        case "UPDATELOBBY": {
+          const data = jsonData.content;
+          const id = data.id;
+          this.$store.dispatch("SaveJoinedLobby", data);
+          this.$router.push({ name: "gamelobby", params: { id } });
           break;
         }
       }
     },
     setParameters(jsonData) {
-      console.log("SetParameters");
-
       const username = this.$store.getters.getPlayerInfo.username;
       const ip = jsonData.content.ip;
 
@@ -123,18 +133,14 @@ export default {
       }
     },
     launchGame() {
-      console.log("LaunchGame");
-
       var child = require("child_process").execFile;
       var executablePath = "C:\\Bloodrun\\BloodRunV2.exe";
 
       child(executablePath, function(err, data) {
         if (err) {
-          console.error(err);
+          console.error(err + data);
           return;
         }
-
-        console.log(data.toString());
       });
     },
     async startGame() {
@@ -142,12 +148,18 @@ export default {
       this.wsMessage.Content = this.joinedLobby;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
       this.socket.send(JSON.stringify(this.wsMessage));
-      console.log(this.wsMessage);
     },
     async leave() {
       this.wsMessage.Action = "LEAVELOBBY";
-      this.wsMessage.Content = this.joinedLobby;
-      this.wsMessage.Player = this.$store.getters.getPlayerInfo;
+
+      var lobby = JSON.parse(JSON.stringify(this.joinedLobby));
+      lobby.userOne = null;
+      lobby.userTwo = null;
+      lobby.userThree = null;
+      lobby.userFour = null;
+      lobby.userOne = this.$store.getters.getPlayerInfo;
+
+      this.wsMessage.Content = lobby;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
       this.socket.send(JSON.stringify(this.wsMessage));
     },
