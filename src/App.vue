@@ -92,6 +92,22 @@ export default {
   margin: 0.5vh;
 }
 
+.artPanel {
+  width: 150px;
+  height: 150px;
+  text-align: center;
+
+  outline: 0;
+  text-decoration: none;
+  color: #c10000;
+
+  border: 2px solid #c10000;
+  border-radius: 10px;
+  background-color: #32324e;
+
+  margin: 0.5vh;
+}
+
 ::-webkit-scrollbar {
   display: none;
 }
