@@ -1,10 +1,14 @@
 <template>
   <div>
-    <p>{{ this.joinedLobby }}</p>
-    <Playerinfo v-bind:playerIndex="0" />
-    <Playerinfo v-bind:playerIndex="1" />
-    <Playerinfo v-bind:playerIndex="2" />
-    <Playerinfo v-bind:playerIndex="3" />
+    <p>{{ this.joinedLobby.name }}</p>
+
+    <div class="joinedPlayersContainer">
+      <Playerinfo v-bind:playerIndex="0" />
+      <Playerinfo v-bind:playerIndex="1" />
+      <Playerinfo v-bind:playerIndex="2" />
+      <Playerinfo v-bind:playerIndex="3" />
+    </div>
+
     <div>
       <div>
         <button v-on:click="startGame" class="artXButton">Start</button>
@@ -50,7 +54,9 @@ export default {
     };
   },
   created() {
-    this.socket = new WebSocket("ws://145.93.96.211:8250/ws/");
+    this.socket = new WebSocket(
+      "ws://" + this.$store.getters.getIpAddress + ":8250/ws/"
+    );
 
     this.socket.onopen = () => {
       this.registerToServer();
@@ -180,3 +186,16 @@ export default {
   }
 };
 </script>
+
+<style>
+.joinedPlayersContainer {
+  height: 50vh;
+  width: 80vw;
+  justify-content: center;
+  display: flex;
+
+  margin-left: 10vw;
+
+  border: 5px solid orange;
+}
+</style>
