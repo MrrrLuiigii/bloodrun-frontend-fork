@@ -10,25 +10,16 @@
     </div>
 
     <div>
-      <div>
+      <div v-if="allPlayersReady">
         <button v-on:click="startGame" class="artXButton">Start</button>
       </div>
+
       <div>
         <Router-link to="/lobbies">
           <button v-on:click="leave" class="artXButton">
             Leave
           </button>
         </Router-link>
-      </div>
-      <div v-if="GamePlayer.lobbyPlayerStatus === 'NotReady'">
-        <button v-on:click="ready" class="artXButton">
-          Ready
-        </button>
-      </div>
-      <div v-else>
-        <button v-on:click="unReady" class="artXButton">
-          Unready
-        </button>
       </div>
     </div>
   </div>
@@ -157,20 +148,53 @@ export default {
       this.wsMessage.Token = await this.$auth.getTokenSilently();
       this.socket.send(JSON.stringify(this.wsMessage));
     },
-    async ready() {
-      this.wsMessage.Action = "PLAYERREADY";
-      this.wsMessage.Content = this.joinedLobby;
-      this.wsMessage.Player = this.$store.getters.getGamePlayer;
-      this.wsMessage.Token = await this.$auth.getTokenSilently();
-      this.socket.send(JSON.stringify(this.wsMessage));
+    allPlayersReady(){
+      this.joinedLobby
+      var count = 0;
+      if(this.datalobby.userOneReady){
+        count++;
+      }
+
+      if(this.datalobby.userTwoReady){
+        count++;
+      }
+
+      if(this.datalobby.userThreeReady){
+        count++;
+      }
+
+      if(this.datalobby.userFourReady){
+        count++;
+      }
+
+      if(this.getPlayerCount == count)
+      {
+        return true;
+      }
+      return false;
     },
-    async unReady() {
-      this.wsMessage.Action = "PLAYERNOTREADY";
-      this.wsMessage.Content = this.joinedLobby;
-      this.wsMessage.Player = this.$store.getters.getGamePlayer;
-      this.wsMessage.Token = await this.$auth.getTokenSilently();
-      this.socket.send(JSON.stringify(this.wsMessage));
-    }
+    getPlayerCount() {
+      var count = 0;
+
+      if (this.datalobby.userOne.id !== 0) {
+        count++;
+      }
+
+      if (this.datalobby.userTwo.id !== 0) {
+        count++;
+      }
+
+      if (this.datalobby.userThree.id !== 0) {
+        count++;
+      }
+
+      if (this.datalobby.userFour.id !== 0) {
+        count++;
+      }
+
+      return count;
+    },
+    
   }
 };
 </script>
