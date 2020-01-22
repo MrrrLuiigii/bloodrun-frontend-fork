@@ -34,7 +34,7 @@ export default {
       commit("SAVE_JOINED_LOBBY", lobby);
     },
     SaveLobbyReady({ commit }, lobbyReady) {
-      commit("SAVE_JOINED_LOBBY", lobbyReady)
+      commit("SAVE_LOBBY_READY", lobbyReady)
     }
   }
 };

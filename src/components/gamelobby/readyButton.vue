@@ -51,7 +51,6 @@ export default {
       this.wsMessage.Content.userOne = this.$store.getters.getPlayerInfo;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
       this.socket.send(JSON.stringify(this.wsMessage));
-      this.allPlayersReady;
     },
     async unReady() {
       this.wsMessage.Action = "SETUNREADY";
@@ -60,52 +59,6 @@ export default {
       this.wsMessage.Content.userOne = this.$store.getters.getPlayerInfo;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
       this.socket.send(JSON.stringify(this.wsMessage));
-      this.allPlayersReady;
-    },
-    allPlayersReady() {
-      var count = 0;
-      if (this.getJoinedlobby.userOneReady) {
-        count++;
-      }
-
-      if (this.getJoinedlobby.userTwoReady) {
-        count++;
-      }
-
-      if (this.getJoinedlobby.userThreeReady) {
-        count++;
-      }
-
-      if (this.getJoinedlobby.userFourReady) {
-        count++;
-      }
-
-      if (this.getPlayerCount === count) {
-        this.$store.dispatch("SaveLobbyReady", true);
-      }
-
-      this.$store.dispatch("SaveLobbyReady", false);
-    },
-    getPlayerCount() {
-      var count = 0;
-
-      if (this.getJoinedlobby.userOne.id !== 0) {
-        count++;
-      }
-
-      if (this.getJoinedlobby.userTwo.id !== 0) {
-        count++;
-      }
-
-      if (this.getJoinedlobby.userThree.id !== 0) {
-        count++;
-      }
-
-      if (this.getJoinedlobby.userFour.id !== 0) {
-        count++;
-      }
-
-      return count;
     }
   }
 };

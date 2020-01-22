@@ -96,11 +96,13 @@ export default {
         case "JOINLOBBY": {
           const data = jsonData.content;
           this.$store.dispatch("SaveJoinedLobby", data);
+          this.allPlayersReady();
           break;
         }
         case "UPDATELOBBY": {
           const data = jsonData.content;
           this.$store.dispatch("SaveJoinedLobby", data);
+          this.allPlayersReady();
           break;
         }
       }
@@ -149,6 +151,55 @@ export default {
       this.wsMessage.Content = lobby;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
       this.socket.send(JSON.stringify(this.wsMessage));
+    },
+    allPlayersReady() {
+      console.log("lekker tellen aap");
+      var count = 0;
+      if (this.joinedLobby.userOneReady) {
+        count++;
+      }
+
+      if (this.joinedLobby.userTwoReady) {
+        count++;
+      }
+
+      if (this.joinedLobby.userThreeReady) {
+        count++;
+      }
+
+      if (this.joinedLobby.userFourReady) {
+        count++;
+      }
+
+      console.log(count);
+      console.log(this.getPlayerCount());
+
+      if (this.getPlayerCount() === count) {
+        return this.$store.dispatch("SaveLobbyReady", true);
+      }
+
+      return this.$store.dispatch("SaveLobbyReady", false);
+    },
+    getPlayerCount() {
+      var count = 0;
+
+      if (this.joinedLobby.userOne.id !== 0) {
+        count++;
+      }
+
+      if (this.joinedLobby.userTwo.id !== 0) {
+        count++;
+      }
+
+      if (this.joinedLobby.userThree.id !== 0) {
+        count++;
+      }
+
+      if (this.joinedLobby.userFour.id !== 0) {
+        count++;
+      }
+
+      return count;
     }
   }
 };
