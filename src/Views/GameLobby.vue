@@ -1,6 +1,9 @@
 <template>
   <div>
-    <p>{{ this.joinedLobby }}</p>
+    <div class="lobbyDetails">
+      <h1 class="gameLobbyName">{{ this.joinedLobby.name }}</h1>
+      <p class="lobbyDescription">{{ this.joinedLobby.description }}</p>
+    </div>
 
     <div class="joinedPlayersContainer">
       <Playerinfo v-bind:playerIndex="0" />
@@ -9,11 +12,13 @@
       <Playerinfo v-bind:playerIndex="3" />
     </div>
 
-    <div>
+    <div class="startAndLeaveContainer">
       <div v-if="getLobbyReady">
-        <button v-on:click="startGame" class="artXButton">Start</button>
+        <button v-on:click="startGame" class="artXButton startGameButton">Start</button>
       </div>
-
+      <div v-else>
+        <button class="artXButton disabledButton startGameButton">Start</button>
+      </div>
       <div>
         <Router-link to="/lobbies">
           <button v-on:click="leave" class="artXButton">
@@ -147,13 +152,11 @@ export default {
       lobby.userThree = null;
       lobby.userFour = null;
       lobby.userOne = this.$store.getters.getPlayerInfo;
-
       this.wsMessage.Content = lobby;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
       this.socket.send(JSON.stringify(this.wsMessage));
     },
     allPlayersReady() {
-      console.log("lekker tellen aap");
       var count = 0;
       if (this.joinedLobby.userOneReady) {
         count++;
@@ -170,9 +173,6 @@ export default {
       if (this.joinedLobby.userFourReady) {
         count++;
       }
-
-      console.log(count);
-      console.log(this.getPlayerCount());
 
       if (this.getPlayerCount() === count) {
         return this.$store.dispatch("SaveLobbyReady", true);
@@ -207,13 +207,40 @@ export default {
 
 <style>
 .joinedPlayersContainer {
-  height: 50vh;
-  width: 80vw;
+  width: 85vw;
   justify-content: center;
   display: flex;
 
-  margin-left: 10vw;
+  margin-left: 7.5vw;
+  padding: 2vh 2vw;
+}
 
-  border: 5px solid orange;
+.lobbyDetails {
+  width: 60vw;
+  height: 20vh;
+
+  margin: 15vh 0 5vh 20vw;
+  padding-top: 2vh;
+
+  background-color: #32324e;
+  border: 2px solid #c10000;
+  border-radius: 10px;
+}
+
+.gameLobbyName {
+  font-size: 70px;
+}
+
+.disabledButton {
+  opacity: .5;
+}
+
+.startGameButton {
+  margin-bottom: 2vh;
+}
+
+.startAndLeaveContainer {
+  width: 80vw;
+  margin: 5vh 0 0 10vw;
 }
 </style>
