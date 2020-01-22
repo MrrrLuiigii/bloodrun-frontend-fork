@@ -1,7 +1,8 @@
 export default {
   state: {
     lobbies: null,
-    joinedLobby: null
+    joinedLobby: null,
+    lobbyReady: null
   },
   mutations: {
     SAVE_JOINED_LOBBY(state, lobby) {
@@ -9,6 +10,9 @@ export default {
     },
     SAVE_LOBBIES(state, lobbies) {
       state.lobbies = lobbies;
+    },
+    SAVE_LOBBY_READY(state, lobbyReady) {
+      state.lobbyReady = lobbyReady;
     }
   },
   getters: {
@@ -17,6 +21,9 @@ export default {
     },
     getJoinedlobby: state => {
       return state.joinedLobby;
+    },
+    getLobbyReady: state => {
+      return state.lobbyReady;
     }
   },
   actions: {
@@ -25,6 +32,9 @@ export default {
     },
     SaveJoinedLobby({ commit }, lobby) {
       commit("SAVE_JOINED_LOBBY", lobby);
+    },
+    SaveLobbyReady({ commit }, lobbyReady) {
+      commit("SAVE_JOINED_LOBBY", lobbyReady)
     }
   }
 };
