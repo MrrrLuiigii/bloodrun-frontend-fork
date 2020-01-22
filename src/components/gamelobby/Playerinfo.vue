@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="
-      joinedLobby.userOne !== null &&
+      joinedLobby.userOne !== null && 
         joinedLobby.userOne.id !== 0 &&
         playerIndex === 0
     "

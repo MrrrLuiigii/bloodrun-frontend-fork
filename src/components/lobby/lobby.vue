@@ -43,16 +43,9 @@ export default {
 
     this.socket.onmessage = () => {};
 
-    this.socket.onclose = function(event) {
-      console.log("Connection closed: " + event);
-      // if (event.wasClean) {
-      // } else {
-      // }
-    };
+    this.socket.onclose = function() {};
 
-    this.socket.onerror = function(error) {
-      console.log("Error: " + error);
-    };
+    this.socket.onerror = function() {};
   },
   methods: {
     async joinLobby() {

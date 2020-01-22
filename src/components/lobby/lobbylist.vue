@@ -49,15 +49,10 @@ export default {
     };
 
     this.socket.onmessage = event => {
-      console.log(event.data);
       this.messageReceived(event.data);
     };
 
-    this.socket.onclose = function() {
-      // if (event.wasClean) {
-      // } else {
-      // }
-    };
+    this.socket.onclose = function() {};
 
     this.socket.onerror = function() {};
   },

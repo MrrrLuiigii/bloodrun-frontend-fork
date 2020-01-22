@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>{{ this.joinedLobby.name }}</p>
+    <p>{{ this.joinedLobby }}</p>
 
     <div class="joinedPlayersContainer">
       <Playerinfo v-bind:playerIndex="0" />
@@ -63,20 +63,12 @@ export default {
     };
 
     this.socket.onmessage = event => {
-      console.log(event.data);
       this.messageReceived(event.data);
     };
 
-    this.socket.onclose = function(event) {
-      console.log("Connection closed: " + event);
-      // if (event.wasClean) {
-      // } else {
-      // }
-    };
+    this.socket.onclose = function() {};
 
-    this.socket.onerror = function(error) {
-      console.log("Error: " + error);
-    };
+    this.socket.onerror = function() {};
   },
   mounted() {
     this.id = this.$route.params.id;
@@ -109,16 +101,12 @@ export default {
         }
         case "JOINLOBBY": {
           const data = jsonData.content;
-          const id = data.id;
           this.$store.dispatch("SaveJoinedLobby", data);
-          this.$router.push({ name: "gamelobby", params: { id } });
           break;
         }
         case "UPDATELOBBY": {
           const data = jsonData.content;
-          const id = data.id;
           this.$store.dispatch("SaveJoinedLobby", data);
-          this.$router.push({ name: "gamelobby", params: { id } });
           break;
         }
       }

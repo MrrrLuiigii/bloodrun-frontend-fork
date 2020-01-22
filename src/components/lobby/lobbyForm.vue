@@ -87,11 +87,7 @@ export default {
       this.messageReceived(event.data);
     };
 
-    this.socket.onclose = function() {
-      // if (event.wasClean) {
-      // } else {
-      // }
-    };
+    this.socket.onclose = function() {};
 
     this.socket.onerror = function() {};
   },
@@ -103,7 +99,6 @@ export default {
       this.wsMessage.Content.userOne = this.$store.getters.getPlayerInfo;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
       this.socket.send(JSON.stringify(this.wsMessage));
-      console.log(this.wsMessage);
     }
   }
 };

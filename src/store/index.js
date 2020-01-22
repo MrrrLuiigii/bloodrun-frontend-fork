@@ -6,7 +6,6 @@ import playerModule from "./playerModule";
 import friendModule from "./friendModule";
 import lobbyModule from "./lobbyModule";
 import websocketModule from "./websocketModule";
-import gameModule from "./gameModule";
 import gamePlayerModule from "./gamePlayerModule";
 import hostModule from "./hostModule";
 
@@ -19,7 +18,6 @@ export default new Vuex.Store({
     friendModule: friendModule,
     lobbyModule: lobbyModule,
     websocketModule: websocketModule,
-    gameModule: gameModule,
     gamePlayerModule: gamePlayerModule,
     hostModule: hostModule
   }
