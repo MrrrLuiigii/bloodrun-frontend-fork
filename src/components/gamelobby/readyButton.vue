@@ -41,14 +41,20 @@ export default {
   methods: {
     async ready() {
       this.wsMessage.Action = "SETREADY";
-      this.wsMessage.Content = this.$store.getters.getJoinedlobby;
+      var lobby = JSON.parse(
+        JSON.stringify(this.$store.getters.getJoinedlobby)
+      );
+      this.wsMessage.Content = lobby;
       this.wsMessage.Content.userOne = this.$store.getters.getPlayerInfo;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
       this.socket.send(JSON.stringify(this.wsMessage));
     },
     async unReady() {
       this.wsMessage.Action = "SETUNREADY";
-      this.wsMessage.Content = this.$store.getters.getJoinedlobby;
+      var lobby = JSON.parse(
+        JSON.stringify(this.$store.getters.getJoinedlobby)
+      );
+      this.wsMessage.Content = lobby;
       this.wsMessage.Content.userOne = this.$store.getters.getPlayerInfo;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
       this.socket.send(JSON.stringify(this.wsMessage));
