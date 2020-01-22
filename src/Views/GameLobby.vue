@@ -10,7 +10,7 @@
     </div>
 
     <div>
-      <div v-if="allPlayersReady">
+      <div v-if="getLobbyReady">
         <button v-on:click="startGame" class="artXButton">Start</button>
       </div>
 
@@ -73,6 +73,9 @@ export default {
     },
     getplayer() {
       return this.$store.getters.getPlayerInfo;
+    },
+    getLobbyReady() {
+      return this.$store.getters.getLobbyReady;
     }
   },
   methods: {
@@ -136,7 +139,6 @@ export default {
     },
     async leave() {
       this.wsMessage.Action = "LEAVELOBBY";
-
       var lobby = JSON.parse(JSON.stringify(this.joinedLobby));
       lobby.userOne = null;
       lobby.userTwo = null;
@@ -147,54 +149,7 @@ export default {
       this.wsMessage.Content = lobby;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
       this.socket.send(JSON.stringify(this.wsMessage));
-    },
-    allPlayersReady(){
-      this.joinedLobby
-      var count = 0;
-      if(this.datalobby.userOneReady){
-        count++;
-      }
-
-      if(this.datalobby.userTwoReady){
-        count++;
-      }
-
-      if(this.datalobby.userThreeReady){
-        count++;
-      }
-
-      if(this.datalobby.userFourReady){
-        count++;
-      }
-
-      if(this.getPlayerCount == count)
-      {
-        return true;
-      }
-      return false;
-    },
-    getPlayerCount() {
-      var count = 0;
-
-      if (this.datalobby.userOne.id !== 0) {
-        count++;
-      }
-
-      if (this.datalobby.userTwo.id !== 0) {
-        count++;
-      }
-
-      if (this.datalobby.userThree.id !== 0) {
-        count++;
-      }
-
-      if (this.datalobby.userFour.id !== 0) {
-        count++;
-      }
-
-      return count;
-    },
-    
+    }
   }
 };
 </script>
