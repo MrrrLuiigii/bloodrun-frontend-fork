@@ -96,6 +96,7 @@ export default {
         case "STARTGAME": {
           this.setParameters(jsonData);
           this.launchGame();
+          this.goToConnectedScreen();
           break;
         }
         case "JOINLOBBY": {
@@ -200,6 +201,11 @@ export default {
       }
 
       return count;
+    },
+    goToConnectedScreen(){
+      this.$store.dispatch("SaveLobbyReady", false);
+      const id = this.joinedLobby.id
+      this.$router.push({ name: "reconnect", params: { id } });
     }
   }
 };
