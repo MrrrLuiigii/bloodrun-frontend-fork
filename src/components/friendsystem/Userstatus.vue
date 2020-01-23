@@ -7,9 +7,9 @@
     </v-list-item-avatar>
 
     <v-list-item-content>
-      <v-list-item-title class="friendsCardName">{{
-        this.$store.getters.getPlayerInfo.name
-      }}</v-list-item-title>
+      <v-list-item-title class="friendsCardName">
+        {{ this.$store.getters.getPlayerInfo.username }}
+      </v-list-item-title>
     </v-list-item-content>
   </v-list-item>
 </template>
@@ -22,7 +22,7 @@ export default {
 
 <style>
 .friendsCardName {
-  font-size: 30px !important;
+  font-size: 25px !important;
   text-align: left !important;
 }
 </style>

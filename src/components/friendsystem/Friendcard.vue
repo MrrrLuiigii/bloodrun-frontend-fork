@@ -61,6 +61,7 @@ export default {
   },
   data() {
     return {
+      socket: null,
       showMenu: false,
       x: 0,
       y: 0,
@@ -87,13 +88,27 @@ export default {
         }
       ],
       wsMessage: {
-        Subject: null,
         Action: null,
         Content: { user: null, friend: null },
         Token: null,
         friendname: null
       }
     };
+  },
+  created() {
+    this.socket = new WebSocket(
+      // "ws://" + this.$store.getters.getIpAddress + ":8250/ws/"
+    );
+
+    this.socket.onopen = () => {};
+
+    this.socket.onmessage = () => {};
+
+    this.socket.onclose = function() {};
+
+    this.socket.onerror = function() {};
+
+    this.getFriendData();
   },
   methods: {
     async removeFriend(friend) {
@@ -102,14 +117,12 @@ export default {
           "Are you sure that you want to remove " + friend.username + " ?"
         )
       ) {
-        this.wsMessage.Subject = "FRIEND";
         this.wsMessage.Action = "REMOVEFRIEND";
         const cont = this.getPlayerInfo;
         this.wsMessage.Content.user = cont;
         this.wsMessage.Content.friend = friend;
         this.wsMessage.Token = await this.$auth.getTokenSilently();
-        this.$socket.send(JSON.stringify(this.wsMessage));
-        console.log(this.wsMessage);
+        this.socket.send(JSON.stringify(this.wsMessage));
       }
     },
     async blockFriend(friend) {
@@ -120,14 +133,12 @@ export default {
             " ?"
         )
       ) {
-        this.wsMessage.Subject = "FRIEND";
         this.wsMessage.Action = "BLOCKREQUEST";
         const cont = this.getPlayerInfo;
         this.wsMessage.Content.user = cont;
         this.wsMessage.Content.friend = friend;
         this.wsMessage.Token = await this.$auth.getTokenSilently();
-        this.$socket.send(JSON.stringify(this.wsMessage));
-        console.log(this.wsMessage);
+        this.socket.send(JSON.stringify(this.wsMessage));
       }
     },
     async unblockFriend(friend) {
@@ -138,14 +149,12 @@ export default {
             " ?"
         )
       ) {
-        this.wsMessage.Subject = "FRIEND";
         this.wsMessage.Action = "ACCEPTREQUEST";
         const cont = this.getPlayerInfo;
         this.wsMessage.Content.user = cont;
         this.wsMessage.Content.friend = friend;
         this.wsMessage.Token = await this.$auth.getTokenSilently();
-        this.$socket.send(JSON.stringify(this.wsMessage));
-        console.log(this.wsMessage);
+        this.socket.send(JSON.stringify(this.wsMessage));
       }
     },
     show(e) {

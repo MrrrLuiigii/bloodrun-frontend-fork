@@ -6,7 +6,7 @@
       <div class="lobbyDescription">{{ this.getPlayerCount() }} / 4</div>
       <div>
         <button
-          v-if="this.getPlayerCount() < 4"
+          v-if="this.playerCount < 4"
           class="joinButton artButton"
           v-on:click="joinLobby"
         >
@@ -24,6 +24,7 @@ export default {
   props: ["lobby"],
   data() {
     return {
+      playerCount: 0,
       socket: null,
       datalobby: this.lobby,
       wsMessage: {
@@ -35,13 +36,15 @@ export default {
     };
   },
   created() {
+    this.playerCount = this.getPlayerCount();
+
     this.socket = new WebSocket(
       "ws://" + this.$store.getters.getIpAddress + ":8250/ws/"
     );
 
     this.socket.onopen = () => {};
 
-    this.socket.onmessage = () => {};
+    this.socket.onmessage = () => { this.playerCount = this.getPlayerCount() };
 
     this.socket.onclose = function() {};
 

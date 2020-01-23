@@ -59,6 +59,7 @@ export default {
   },
   data() {
     return {
+      socket: null,
       wsMessage: {
         Subject: null,
         Action: null,
@@ -68,7 +69,20 @@ export default {
     };
   },
   created() {
-    this.$options.sockets.onmessage = data => this.messageReceived(data);
+    this.socket = new WebSocket(
+      "ws://" + this.$store.getters.getIpAddress + ":8250/ws/"
+    );
+
+    this.socket.onopen = () => {};
+
+    this.socket.onmessage = event => {
+      this.messageReceived(event.data);
+    };
+
+    this.socket.onclose = function() {};
+
+    this.socket.onerror = function() {};
+
     this.getFriendData();
   },
   methods: {
@@ -77,27 +91,23 @@ export default {
       setTimeout(() => {
         const cont = this.$store.getters.getPlayerInfo;
         if (cont.username !== null) {
-          this.wsMessage.Subject = "FRIEND";
           this.wsMessage.Action = "GETALLFRIENDS";
           cont.email = this.$auth.user.email;
           this.wsMessage.Content = cont;
           this.wsMessage.Token = token;
-          this.$socket.send(JSON.stringify(this.wsMessage));
-          console.log(this.wsMessage);
+          this.socket.send(JSON.stringify(this.wsMessage));
         }
       }, 900);
     },
-    messageReceived(data) {
+    async messageReceived(data) {
       const jsonData = JSON.parse(data.data);
       switch (jsonData.action) {
         case "GETALLFRIENDS":
-          console.log(jsonData.content);
           this.$store.dispatch("SaveFriendData", jsonData.content.friends);
       }
     },
     startChat(friend) {
       this.$store.dispatch("addChat", friend);
-      console.log(this.$store.getters.getChatList);
     }
   },
   computed: {

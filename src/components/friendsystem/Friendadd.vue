@@ -18,8 +18,8 @@ export default {
   name: "Friendadd",
   data() {
     return {
+      socket: null,
       wsMessage: {
-        Subject: null,
         Action: null,
         Content: null,
         Token: null,
@@ -32,16 +32,27 @@ export default {
       return this.$store.getters.getPlayerInfo;
     }
   },
-  components: {},
+  created() {
+    this.socket = new WebSocket();
+    // "ws://" + this.$store.getters.getIpAddress + ":8250/ws/"
+
+    this.socket.onopen = () => {};
+
+    this.socket.onmessage = () => {};
+
+    this.socket.onclose = function() {};
+
+    this.socket.onerror = function() {};
+
+    this.getFriendData();
+  },
   methods: {
     async sendFriendRequest() {
-      this.wsMessage.Subject = "FRIEND";
       this.wsMessage.Action = "INVITE";
       const cont = this.getPlayerInfo;
       this.wsMessage.Content = cont;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
       this.$socket.send(JSON.stringify(this.wsMessage));
-      console.log(this.wsMessage);
       this.wsMessage.friendname = "";
     }
   }
