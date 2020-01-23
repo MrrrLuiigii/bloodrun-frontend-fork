@@ -14,7 +14,9 @@
 
     <div class="startAndLeaveContainer">
       <div v-if="getLobbyReady">
-        <button v-on:click="startGame" class="artXButton startGameButton">Start</button>
+        <button v-on:click="startGame" class="artXButton startGameButton">
+          Start
+        </button>
       </div>
       <div v-else>
         <button class="artXButton disabledButton startGameButton">Start</button>
@@ -39,6 +41,7 @@ export default {
   },
   data() {
     return {
+      playerCount: 0,
       socket: null,
       id: "",
       wsMessage: {
@@ -60,6 +63,7 @@ export default {
 
     this.socket.onmessage = event => {
       this.messageReceived(event.data);
+      this.getPlayerCount();
     };
 
     this.socket.onclose = function() {};
@@ -102,6 +106,7 @@ export default {
         case "JOINLOBBY": {
           const data = jsonData.content;
           this.$store.dispatch("SaveJoinedLobby", data);
+          this.getPlayerCount();
           this.allPlayersReady();
           break;
         }
@@ -184,22 +189,31 @@ export default {
     getPlayerCount() {
       var count = 0;
 
-      if (this.joinedLobby.userOne.id !== 0) {
-        count++;
+      if (this.joinedLobby.userOne !== null) {
+        if (this.joinedLobby.userOne.id !== 0) {
+          count++;
+        }
       }
 
-      if (this.joinedLobby.userTwo.id !== 0) {
-        count++;
+      if (this.joinedLobby.userTwo !== null) {
+        if (this.joinedLobby.userTwo.id !== 0) {
+          count++;
+        }
       }
 
-      if (this.joinedLobby.userThree.id !== 0) {
-        count++;
+      if (this.joinedLobby.userThree !== null) {
+        if (this.joinedLobby.userThree.id !== 0) {
+          count++;
+        }
       }
 
-      if (this.joinedLobby.userFour.id !== 0) {
-        count++;
+      if (this.joinedLobby.userFour !== null) {
+        if (this.joinedLobby.userFour.id !== 0) {
+          count++;
+        }
       }
 
+      this.playerCount = count;
       return count;
     },
     goToConnectedScreen(){
@@ -238,7 +252,7 @@ export default {
 }
 
 .disabledButton {
-  opacity: .5;
+  opacity: 0.5;
 }
 
 .startGameButton {
