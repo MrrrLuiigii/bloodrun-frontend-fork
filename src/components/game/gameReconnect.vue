@@ -29,6 +29,10 @@ export default {
 </script>
 
 <style>
+.connectedContainer {
+  padding-top: 20vh;
+}
+
 .disconnectedContainer {
   padding-top: 20vh;
 }
