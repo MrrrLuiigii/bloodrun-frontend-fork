@@ -1,6 +1,6 @@
 export default {
   state: {
-    ipAddress: "25.77.68.216"
+    ipAddress: "192.168.1.72"
   },
   getters: {
     getIpAddress: state => {

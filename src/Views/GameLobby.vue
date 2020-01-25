@@ -122,6 +122,8 @@ export default {
       const username = this.$store.getters.getPlayerInfo.username;
       const ip = jsonData.content.ip;
 
+      this.$store.dispatch("SetGameServerIp", ip);
+
       var content = ip + "\n" + username;
 
       const filepath = "C:\\Bloodrun\\BloodrunProperties.props";
@@ -216,9 +218,9 @@ export default {
       this.playerCount = count;
       return count;
     },
-    goToConnectedScreen(){
+    goToConnectedScreen() {
       this.$store.dispatch("SaveLobbyReady", false);
-      const id = this.joinedLobby.id
+      const id = this.joinedLobby.id;
       this.$router.push({ name: "reconnect", params: { id } });
     }
   }
