@@ -17,7 +17,58 @@ export default {
   components: {
     homebutton
   },
+  data() {
+    return {
+      wsMessage: {
+        Action: null,
+        Content: null,
+        Token: null
+      }
+    };
+  },
+  created() {
+    this.socket = new WebSocket(
+      "ws://" + this.$store.getters.getIpAddress + ":8250/ws/"
+    );
+
+    this.socket.onopen = () => {
+      this.registerToServer();
+    };
+
+    this.socket.onmessage = event => {
+      this.messageReceived(event.data);
+    };
+
+    this.socket.onclose = function() {};
+
+    this.socket.onerror = function() {};
+  },
   methods: {
+    async registerToServer() {
+      this.wsMessage.Action = "REGISTER";
+      this.wsMessage.Content = this.$store.getters.getPlayerInfo;
+      this.wsMessage.Token = await this.$auth.getTokenSilently();
+      this.socket.send(JSON.stringify(this.wsMessage));
+    },
+    messageReceived(data) {
+      const jsonData = JSON.parse(data);
+
+      console.log(jsonData);
+      switch (jsonData.action) {
+        case "ENDGAME": {
+          console.log("Yeet de game is klaar");
+          this.$store.dispatch("SetGameWinner", jsonData.content.winner);
+          this.$store.dispatch("SetGameLobby", jsonData.content.lobby);
+
+          this.$store.dispatch("SaveLobbies", null);
+          this.$store.dispatch("SaveLobbyReady", null);
+          this.$store.dispatch("SaveJoinedLobby", null);
+          this.$store.dispatch("SetGameServerIp", null);
+          this.$router.push({ name: "postGame" });
+          break;
+        }
+      }
+    },
     relauchGame() {
       this.setParameters();
       this.launchGame();
