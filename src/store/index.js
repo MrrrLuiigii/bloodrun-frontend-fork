@@ -8,6 +8,7 @@ import lobbyModule from "./lobbyModule";
 import websocketModule from "./websocketModule";
 import gamePlayerModule from "./gamePlayerModule";
 import hostModule from "./hostModule";
+import gameModule from "./gameModule";
 
 Vue.use(Vuex);
 
@@ -19,6 +20,7 @@ export default new Vuex.Store({
     lobbyModule: lobbyModule,
     websocketModule: websocketModule,
     gamePlayerModule: gamePlayerModule,
-    hostModule: hostModule
+    hostModule: hostModule,
+    gameModule: gameModule
   }
 });

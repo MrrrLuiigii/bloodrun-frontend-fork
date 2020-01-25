@@ -1,18 +1,11 @@
 <template>
   <div>
-    <div v-if="connected" class="disconnectedContainer">
-      <h1>Disconnected</h1>
+    <div class="disconnectedContainer">
+      <h1>Reconnect</h1>
       <p>
-        You have been disconnected from the game.<br />Click the button below te
-        reconnect...
+        Click the button below te reconnect to the game...
       </p>
-      <button class="artButton">Reconnect</button>
-    </div>
-    <div v-else class="connectedContainer">
-      <h1>Connected</h1>
-      <p>
-        Your game is currently running...
-      </p>
+      <button class="artButton" @click="relauchGame">Reconnect</button>
     </div>
     <homebutton />
   </div>
@@ -24,15 +17,42 @@ export default {
   components: {
     homebutton
   },
-  props: ["connected"]
+  methods: {
+    relauchGame() {
+      this.setParameters();
+      this.launchGame();
+    },
+    setParameters() {
+      const username = this.$store.getters.getPlayerInfo.username;
+      const ip = this.$store.getters.getGameServerIp;
+
+      var content = ip + "\n" + username;
+
+      const filepath = "C:\\Bloodrun\\BloodrunProperties.props";
+
+      var fs = require("fs");
+      try {
+        fs.writeFileSync(filepath, content, "utf-8");
+      } catch (e) {
+        alert("Failed to save the file !");
+      }
+    },
+    launchGame() {
+      var child = require("child_process").execFile;
+      var executablePath = "C:\\Bloodrun\\BloodRunV2.exe";
+
+      child(executablePath, function(err, data) {
+        if (err) {
+          console.error(err + data);
+          return;
+        }
+      });
+    }
+  }
 };
 </script>
 
 <style>
-.connectedContainer {
-  padding-top: 20vh;
-}
-
 .disconnectedContainer {
   padding-top: 20vh;
 }
