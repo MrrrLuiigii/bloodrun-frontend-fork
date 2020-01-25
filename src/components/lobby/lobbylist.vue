@@ -99,7 +99,7 @@ export default {
 }
 
 .lobbyContainer {
-  width: 750px;
+  width: 800px;
   margin: 2vh auto 10vh auto;
   height: 85vh;
 }
