@@ -5,7 +5,7 @@
       <input
         class="form-control"
         type="text"
-        v-model="wsMessage.friendname"
+        v-model="wsMessage.Content.friendTwo"
         placeholder="Username"
         v-on:keyup.enter="sendFriendRequest()"
       />
@@ -21,9 +21,11 @@ export default {
       socket: null,
       wsMessage: {
         Action: null,
-        Content: null,
+        Content: {
+          friendOne: null,
+          friendTwo: null,
+        },
         Token: null,
-        friendname: null
       }
     };
   },
@@ -34,7 +36,7 @@ export default {
   },
   created() {
     this.socket = new WebSocket();
-    // "ws://" + this.$store.getters.getIpAddress + ":8250/ws/"
+    "ws://" + this.$store.getters.getFriendsIpAddress + ":8321/ws/"
 
     this.socket.onopen = () => {};
 
@@ -50,10 +52,10 @@ export default {
     async sendFriendRequest() {
       this.wsMessage.Action = "INVITE";
       const cont = this.getPlayerInfo;
-      this.wsMessage.Content = cont;
+      this.wsMessage.Content.friendOne = cont.id;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
       this.$socket.send(JSON.stringify(this.wsMessage));
-      this.wsMessage.friendname = "";
+        this.wsMessage.Content.friendOne = "";
     }
   }
 };

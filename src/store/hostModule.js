@@ -1,10 +1,14 @@
 export default {
   state: {
-    ipAddress: "192.168.1.72"
+    ipAddress: "25.30.148.147",
+    friendsIpAddress: "localhost"
   },
   getters: {
     getIpAddress: state => {
       return state.ipAddress;
+    },
+    getFriendsIpAddress: state => {
+      return state.friendsIpAddress;
     }
   }
 };

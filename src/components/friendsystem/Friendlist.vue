@@ -1,48 +1,12 @@
 <template>
   <div>
     <v-list subheader dense>
-      <v-subheader>Online Friends</v-subheader>
+      <v-subheader>Friends</v-subheader>
       <v-list-item
         v-for="(friend, index) in onlineFriends"
         :key="index"
         @click="startChat(friend)"
       >
-        <Friendcard :friend="friend"></Friendcard>
-      </v-list-item>
-    </v-list>
-    <v-list subheader dense>
-      <v-subheader>Inlobby Friends</v-subheader>
-      <v-list-item
-        v-for="(friend, index) in inLobbyFriends"
-        :key="index"
-        @click="startChat(friend)"
-      >
-        <Friendcard :friend="friend"></Friendcard>
-      </v-list-item>
-    </v-list>
-    <v-list subheader dense>
-      <v-subheader>InGame Friends</v-subheader>
-      <v-list-item
-        v-for="(friend, index) in inGameFriends"
-        :key="index"
-        @click="startChat(friend)"
-      >
-        <Friendcard :friend="friend"></Friendcard>
-      </v-list-item>
-    </v-list>
-    <v-list subheader dense>
-      <v-subheader>Offline Friends</v-subheader>
-      <v-list-item
-        v-for="(friend, index) in offlineFriends"
-        :key="index"
-        @click="startChat(friend)"
-      >
-        <Friendcard :friend="friend"></Friendcard>
-      </v-list-item>
-    </v-list>
-    <v-list subheader dense>
-      <v-subheader>Blocked Users</v-subheader>
-      <v-list-item v-for="(friend, index) in blockedUsers" :key="index">
         <Friendcard :friend="friend"></Friendcard>
       </v-list-item>
     </v-list>
@@ -70,10 +34,16 @@ export default {
   },
   created() {
     this.socket = new WebSocket(
-      "ws://" + this.$store.getters.getIpAddress + ":8250/ws/"
+      "ws://" + this.$store.getters.getFriendsIpAddress + ":8321/ws/"
     );
 
-    this.socket.onopen = () => {};
+    this.socket.onopen = () => {
+    setTimeout(() => {
+      this.registerToServer().then(() => {
+          this.getFriendData();
+      });
+      }, 2000)
+    };
 
     this.socket.onmessage = event => {
       this.messageReceived(event.data);
@@ -83,27 +53,30 @@ export default {
 
     this.socket.onerror = function() {};
 
-    this.getFriendData();
+
   },
   methods: {
     async getFriendData() {
       const token = await this.$auth.getTokenSilently();
-      setTimeout(() => {
         const cont = this.$store.getters.getPlayerInfo;
-        if (cont.username !== null) {
           this.wsMessage.Action = "GETALLFRIENDS";
-          cont.email = this.$auth.user.email;
           this.wsMessage.Content = cont;
           this.wsMessage.Token = token;
           this.socket.send(JSON.stringify(this.wsMessage));
-        }
-      }, 900);
+    },
+        async registerToServer() {
+      this.wsMessage.Action = "REGISTER";
+      this.wsMessage.Content = this.$store.getters.getPlayerInfo;
+      this.wsMessage.Token = await this.$auth.getTokenSilently();
+      this.socket.send(JSON.stringify(this.wsMessage));
     },
     async messageReceived(data) {
-      const jsonData = JSON.parse(data.data);
-      switch (jsonData.action) {
+      const jsonData = JSON.parse(data);
+      console.log(jsonData)
+      switch (jsonData.Action) {
         case "GETALLFRIENDS":
-          this.$store.dispatch("SaveFriendData", jsonData.content.friends);
+          this.$store.dispatch("SaveFriendData", jsonData.Content);
+          console.table(this.$store.getters.onlinefriends)
       }
     },
     startChat(friend) {
@@ -114,18 +87,6 @@ export default {
     onlineFriends() {
       return this.$store.getters.onlinefriends;
     },
-    inLobbyFriends() {
-      return this.$store.getters.inLobbyFriends;
-    },
-    inGameFriends() {
-      return this.$store.getters.inGameFriends;
-    },
-    offlineFriends() {
-      return this.$store.getters.offlinefriends;
-    },
-    blockedUsers() {
-      return this.$store.getters.blockedUsers;
-    }
   }
 };
 </script>
