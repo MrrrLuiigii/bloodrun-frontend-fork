@@ -1,7 +1,6 @@
 export default {
   state: {
     friends: [
-      { username: "Yeet", accountStatus: "Online", friendStatus: "Requested" }
     ]
   },
   mutations: {
@@ -20,42 +19,13 @@ export default {
   },
   getters: {
     onlinefriends: state => {
-      return state.friends.filter(friend => {
-        return (
-          friend.accountStatus == "Online" && friend.friendStatus == "Accepted"
-        );
-      });
-    },
-    offlinefriends: state => {
-      return state.friends.filter(friend => {
-        return (
-          friend.accountStatus == "Offline" && friend.friendStatus == "Accepted"
-        );
-      });
-    },
-    inLobbyFriends: state => {
-      return state.friends.filter(friend => {
-        return (
-          friend.accountStatus == "InLobby" && friend.friendStatus == "Accepted"
-        );
-      });
-    },
-    inGameFriends: state => {
-      return state.friends.filter(friend => {
-        return (
-          friend.accountStatus == "InGame" && friend.friendStatus == "Accepted"
-        );
-      });
+      return state.friends.acceptedFriends
     },
     pendingRequests: state => {
-      return state.friends.filter(friend => {
-        return friend.friendStatus == "Requested";
-      });
+      return state.friends.pendingFriends
     },
     blockedUsers: state => {
-      return state.friends.filter(friend => {
-        return friend.friendStatus == "Blocked";
-      });
+      return state.friends.blockedFriends
     },
     getfriends: state => {
       return state.friends;
