@@ -1,50 +1,149 @@
 <template>
-  <div></div>
+  <div class="postGameContainer">
+    <div class="gameWinnerContainer">
+      The winner is...<br />{{ this.getGameWinner.username }}
+    </div>
+    <div class="gameLobbyContainer">
+      <div class="gameLobby">
+        <div class="gameLobbyName">
+          {{ this.getGameLobby.name }}
+        </div>
+        <div class="gameLobbyDescription">
+          {{ this.getGameLobby.description }}
+          <br /><br />
+          You have lost...
+        </div>
+      </div>
+      <div class="gameLobbyPlayersContainer">
+        <div v-if="getGameLobby.userOne !== null">
+          <div
+            class="gameLoserContainer"
+            v-if="
+              getGameLobby.userOne.id !== 0 &&
+                getGameLobby.userOne.id !== getGameWinner.id
+            "
+          >
+            {{ this.getGameLobby.userTwo.username }}
+          </div>
+        </div>
+
+        <div v-if="getGameLobby.userTwo !== null">
+          <div
+            class="gameLoserContainer"
+            v-if="
+              getGameLobby.userTwo.id !== 0 &&
+                getGameLobby.userTwo.id !== getGameWinner.id
+            "
+          >
+            {{ this.getGameLobby.userTwo.username }}
+          </div>
+        </div>
+
+        <div v-if="getGameLobby.userThree !== null">
+          <div
+            class="gameLoserContainer"
+            v-if="
+              getGameLobby.userThree.id !== 0 &&
+                getGameLobby.userThree.id !== getGameWinner.id
+            "
+          >
+            {{ this.getGameLobby.userThree.username }}
+          </div>
+        </div>
+
+        <div v-if="getGameLobby.userFour !== null">
+          <div
+            class="gameLoserContainer"
+            v-if="
+              getGameLobby.userFour.id !== 0 &&
+                getGameLobby.userFour.id !== getGameWinner.id
+            "
+          >
+            {{ this.getGameLobby.userFour.username }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <homeButton />
+  </div>
 </template>
 
 <script>
+import homeButton from "@/components/buttons/homebutton";
+
 export default {
-  name: postGame,
-  components: {},
-  data() {
-    return {
-      winner: null,
-      lobby: null
-    };
+  components: {
+    homeButton
   },
-  created() {
-    this.socket = new WebSocket(
-      "ws://" + this.$store.getters.getIpAddress + ":8250/ws/"
-    );
-
-    this.socket.onopen = () => {};
-
-    this.socket.onmessage = event => {
-      this.messageReceived(event.data);
-    };
-
-    this.socket.onclose = function() {};
-
-    this.socket.onerror = function() {};
-  },
-  methods: {
-    messageReceived(data) {
-      const jsonData = JSON.parse(data);
-      switch (jsonData.action) {
-        case "ENDGAME": {
-          this.winner = jsonData.winner;
-          this.lobby = jsonData.lobby;
-          this.$store.dispatch("SaveLobbies", null);
-          this.$store.dispatch("SaveLobbyReady", null);
-          this.$store.dispatch("SaveJoinedLobby", null);
-          this.$store.dispatch("SetGameServerIp", null);
-          this.$router.push({ name: "home", params: { id } });
-          break;
-        }
-      }
+  computed: {
+    getGameWinner() {
+      return this.$store.getters.getGameWinner;
+    },
+    getGameLobby() {
+      return this.$store.getters.getGameLobby;
     }
   }
 };
 </script>
 
-<style></style>
+<style>
+.postGameContainer {
+  width: 90vw;
+  height: 80vh;
+
+  margin-left: 5vw;
+  margin-top: 5vh;
+}
+
+.gameLobbyContainer {
+  padding: 2vh 0;
+
+  background-color: #32324e;
+
+  border: 2px solid #c10000;
+  border-radius: 10px;
+}
+
+.gameWinnerContainer {
+  width: 80vw;
+  height: 25vh;
+
+  margin-left: 5vw;
+
+  font-size: 80px;
+}
+
+.gameLobby {
+  width: 70vw;
+  height: 20vh;
+
+  margin-left: 10vw;
+}
+
+.gameLobbyName {
+  font-size: 50px;
+}
+
+.gameLobbyPlayersContainer {
+  width: 70vw;
+  height: 20vw;
+
+  margin-left: 10vw;
+
+  justify-content: center;
+  display: flex;
+}
+
+.gameLoserContainer {
+  width: 20vw;
+  height: 20vh;
+
+  font-size: 40px;
+
+  background-color: #191938;
+
+  border: 2px solid #c10000;
+  border-radius: 10px;
+  margin: 0 1vw;
+}
+</style>
