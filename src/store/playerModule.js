@@ -5,9 +5,6 @@ export default {
   mutations: {
     SAFE_PLAYER_INFO(state, player) {
       state.player = player;
-    },
-    SAVE_DECK_COLLECTION(state, deckcollection) {
-      state.player.deckCollection = deckcollection;
     }
   },
   getters: {
@@ -18,9 +15,6 @@ export default {
   actions: {
     SavePlayerInfo({ commit }, player) {
       commit("SAFE_PLAYER_INFO", player);
-    },
-    SaveDeckCollection({ commit }, deckcollection) {
-      commit("SAVE_DECK_COLLECTION", deckcollection);
     }
   }
 };

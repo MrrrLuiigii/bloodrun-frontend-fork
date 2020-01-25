@@ -2,19 +2,13 @@
   <v-app class="friendCard">
     <v-list-item @contextmenu="show">
       <v-list-item-avatar size="36">
-        <v-img :src="friend.avatar"></v-img>
+        <v-img :src="this.avatar"></v-img>
       </v-list-item-avatar>
 
       <v-list-item-content>
         <v-list-item-title v-text="friend.username"></v-list-item-title>
-        <v-list-item-subtitle
-          v-text="friend.accountStatus"
-        ></v-list-item-subtitle>
       </v-list-item-content>
 
-      <v-list-item-icon>
-        <v-icon :color="friend.active ? 'purple' : 'grey'">mdi-chat</v-icon>
-      </v-list-item-icon>
     </v-list-item>
     <v-menu
       v-model="showMenu"
@@ -23,18 +17,9 @@
       absolute
       offset-y
     >
-      <v-list v-if="friend.friendStatus !== 'Blocked'">
+      <v-list >
         <v-list-item
-          v-for="(item, index) in unblocked"
-          :key="index"
-          @click="item.menuAction(friend)"
-        >
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
-      <v-list v-if="friend.friendStatus == 'Blocked'">
-        <v-list-item
-          v-for="(item, index) in blocked"
+          v-for="(item, index) in friendAction"
           :key="index"
           @click="item.menuAction(friend)"
         >
@@ -61,31 +46,17 @@ export default {
   },
   data() {
     return {
-      socket: null,
+      avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRHVBpa8tcNHQhs_Rpqf5zpgsqilYxePNVvlxjb8qJzw6-_LWMvw&s",
       showMenu: false,
       x: 0,
       y: 0,
-      unblocked: [
+      friendAction: [
         {
           title: "Remove friend",
           menuAction: friend => {
             this.removeFriend(friend);
           }
         },
-        {
-          title: "Block all communications",
-          menuAction: friend => {
-            this.blockFriend(friend);
-          }
-        }
-      ],
-      blocked: [
-        {
-          title: "Unblock",
-          menuAction: friend => {
-            this.unblockFriend(friend);
-          }
-        }
       ],
       wsMessage: {
         Action: null,
@@ -97,7 +68,7 @@ export default {
   },
   created() {
     this.socket = new WebSocket(
-      // "ws://" + this.$store.getters.getIpAddress + ":8250/ws/"
+      "ws://" + this.$store.getters.getFriendsIpAddress + ":8321/ws/"
     );
 
     this.socket.onopen = () => {};
@@ -108,7 +79,6 @@ export default {
 
     this.socket.onerror = function() {};
 
-    this.getFriendData();
   },
   methods: {
     async removeFriend(friend) {
