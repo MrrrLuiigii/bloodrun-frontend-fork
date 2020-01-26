@@ -56,15 +56,13 @@ export default {
       console.log(jsonData);
       switch (jsonData.action) {
         case "ENDGAME": {
-          console.log("Yeet de game is klaar");
           this.$store.dispatch("SetGameWinner", jsonData.content.winner);
           this.$store.dispatch("SetGameLobby", jsonData.content.lobby);
-
           this.$store.dispatch("SaveLobbies", null);
           this.$store.dispatch("SaveLobbyReady", null);
           this.$store.dispatch("SaveJoinedLobby", null);
           this.$store.dispatch("SetGameServerIp", null);
-          this.$router.push({ name: "postGame" });
+          this.$router.push({ name: "postgame"});
           break;
         }
       }
