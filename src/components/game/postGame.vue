@@ -19,8 +19,7 @@
           <div
             class="gameLoserContainer"
             v-if="
-              getGameLobby.userOne.id !== 0 &&
-                getGameLobby.userOne.id !== getGameWinner.id
+                getGameLobby.userOne.username !== getGameWinner.username
             "
           >
             {{ this.getGameLobby.userTwo.username }}
@@ -31,8 +30,7 @@
           <div
             class="gameLoserContainer"
             v-if="
-              getGameLobby.userTwo.id !== 0 &&
-                getGameLobby.userTwo.id !== getGameWinner.id
+                getGameLobby.userTwo.username !== getGameWinner.username
             "
           >
             {{ this.getGameLobby.userTwo.username }}
@@ -43,8 +41,7 @@
           <div
             class="gameLoserContainer"
             v-if="
-              getGameLobby.userThree.id !== 0 &&
-                getGameLobby.userThree.id !== getGameWinner.id
+                getGameLobby.userThree.username !== getGameWinner.username
             "
           >
             {{ this.getGameLobby.userThree.username }}
@@ -55,8 +52,7 @@
           <div
             class="gameLoserContainer"
             v-if="
-              getGameLobby.userFour.id !== 0 &&
-                getGameLobby.userFour.id !== getGameWinner.id
+                getGameLobby.userFour.username !== getGameWinner.username
             "
           >
             {{ this.getGameLobby.userFour.username }}
