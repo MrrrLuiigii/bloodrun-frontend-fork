@@ -23,7 +23,7 @@ export default {
 <style lang="scss">
 @font-face {
   font-family: "Turtles";
-  src: url("/assets/font/Turtles.ttf");
+  src: url("./assets/font/Turtles.ttf");
 }
 
 .turtlesFont {
