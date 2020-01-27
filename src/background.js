@@ -39,7 +39,6 @@ function createWindow() {
   win.maximize();
   win.setResizable(false);
   win.removeMenu(true);
-  win.setFullScreen(true);
 
   win.on("closed", () => {
     win = null;
