@@ -7,7 +7,6 @@
         </button>
       </Router-link>
     </div>
-
     <div>
       <button class="artButton" @click="logout()">
         Quit
