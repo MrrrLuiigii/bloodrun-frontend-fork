@@ -3,7 +3,7 @@
     <div class="gameWinnerContainer">
       The winner is...<br />{{ this.getGameWinner.username }}
     </div>
-    <div class="gameLobbyContainer">
+    <!-- <div class="gameLobbyContainer">
       <div class="gameLobby">
         <div class="gameLobbyName">
           {{ this.getGameLobby.name }}
@@ -59,7 +59,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <homeButton />
   </div>
 </template>

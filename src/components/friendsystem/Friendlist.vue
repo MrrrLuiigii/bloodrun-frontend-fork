@@ -38,11 +38,11 @@ export default {
     );
 
     this.socket.onopen = () => {
-    setTimeout(() => {
-      this.registerToServer().then(() => {
+      setTimeout(() => {
+        this.registerToServer().then(() => {
           this.getFriendData();
-      });
-      }, 2000)
+        });
+      }, 2000);
     };
 
     this.socket.onmessage = event => {
@@ -52,19 +52,17 @@ export default {
     this.socket.onclose = function() {};
 
     this.socket.onerror = function() {};
-
-
   },
   methods: {
     async getFriendData() {
       const token = await this.$auth.getTokenSilently();
-        const cont = this.$store.getters.getPlayerInfo;
-          this.wsMessage.Action = "GETALLFRIENDS";
-          this.wsMessage.Content = cont;
-          this.wsMessage.Token = token;
-          this.socket.send(JSON.stringify(this.wsMessage));
+      const cont = this.$store.getters.getPlayerInfo;
+      this.wsMessage.Action = "GETALLFRIENDS";
+      this.wsMessage.Content = cont;
+      this.wsMessage.Token = token;
+      this.socket.send(JSON.stringify(this.wsMessage));
     },
-        async registerToServer() {
+    async registerToServer() {
       this.wsMessage.Action = "REGISTER";
       this.wsMessage.Content = this.$store.getters.getPlayerInfo;
       this.wsMessage.Token = await this.$auth.getTokenSilently();
@@ -72,11 +70,11 @@ export default {
     },
     async messageReceived(data) {
       const jsonData = JSON.parse(data);
-      console.log(jsonData)
+      console.log(jsonData);
       switch (jsonData.Action) {
         case "GETALLFRIENDS":
           this.$store.dispatch("SaveFriendData", jsonData.Content);
-          console.table(this.$store.getters.onlinefriends)
+          console.table(this.$store.getters.onlinefriends);
       }
     },
     startChat(friend) {
@@ -86,7 +84,7 @@ export default {
   computed: {
     onlineFriends() {
       return this.$store.getters.onlinefriends;
-    },
+    }
   }
 };
 </script>
